@@ -1,5 +1,6 @@
 export default {
   pages: [
+    'pages/user-login/index',
     'pages/tabPage/order/index',
     'pages/tabPage/myhome/index',
     'pages/tabPage/commission/index'
