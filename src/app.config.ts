@@ -1,7 +1,9 @@
 export default {
   pages: [
-    'pages/user-login/index',
+    'pages/tabPage/order/search',
     'pages/tabPage/order/index',
+    'pages/user-login/index',
+    'pages/user-login/user_name',
     'pages/tabPage/myhome/index',
     'pages/tabPage/commission/index'
   ],
@@ -22,13 +24,11 @@ export default {
       },
       {
         pagePath: 'pages/tabPage/commission/index',
-        text: '我的佣金',
         // iconPath: './image/ic_me_normal.png',
         // selectedIconPath: './image/ic_me_selected.png'
       },
       {
         pagePath: 'pages/tabPage/myhome/index',
-        text: '我的',
         // iconPath: './image/ic_me_normal.png',
         // selectedIconPath: './image/ic_me_selected.png'
       }]
