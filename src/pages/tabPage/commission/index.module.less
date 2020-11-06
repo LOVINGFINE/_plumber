@@ -1,5 +1,85 @@
 .box {
-    background-color: #555;
-    width: 50px;
-    height: 50px;
+    width: 100%;
+    background-color: #fff;
+    overflow-y: auto;
+}
+.top {
+    width: 100%;
+    padding: 30px 36px;
+    box-sizing: border-box;
+    .top_box {
+        position: relative;
+        width: 100%;
+        background-color: #666;
+        height: 160px;
+        border-radius: 20px;
+        overflow: hidden;
+        .top_message {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0%;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            .message_item {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                color: #fff;
+                .message_text {
+                   font-size: 26px;
+                }
+                .message_number {
+                    font-size: 48px;
+                    font-weight: bold;
+                } 
+            }
+        }
+        .top_bgImg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+.main {
+    width: 100%;
+    height: 852px;
+}
+
+// comList
+.list_title {
+    width: 100%;
+    height: 90px;
+    padding: 0 31px;
+    box-sizing: border-box;
+    background-color: #F5F6F7;
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+    color: #666;
+    font-weight: bold;
+}
+.com_item {
+    width: 100%;
+    border-bottom: 1px solid #E6E6E6;
+    padding-bottom: 24px;
+    .com_item_time {
+        height: 64px;
+        font-size: 30px;
+        font-weight: bold;
+        color: #333333;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .com_item_text {
+        height: 60px;
+        line-height: 60px;
+        font-size: 26px;
+        color: #999999;
+    }
 }

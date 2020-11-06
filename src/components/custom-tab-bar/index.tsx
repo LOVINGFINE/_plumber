@@ -2,9 +2,13 @@ import React,{useState} from 'react'
 import Taro from '@tarojs/taro'
 import {AtTabBar} from 'taro-ui'
 import * as images from '@/assets/model'
-export default ()=>{
-    const [current,setCurrent] = useState<number>(0)
-    const setNavLink =(e:any)=>{
+export default (
+  {
+    current,
+    setCurrent
+  }:{current:number,setCurrent:(e:number)=>void}
+)=>{
+    const setNavLink =(e:number)=>{
         setCurrent(e)
         switch(e){
           case 0:

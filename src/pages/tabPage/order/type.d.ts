@@ -12,3 +12,7 @@ export interface TPro {
     name:string
     id:string
 }
+
+export interface Il {
+    list:Array<Ilist>
+}

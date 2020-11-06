@@ -21,7 +21,7 @@ export default (
     return <>
        {
            show?(
-            <View className={style.box}>
+            <View className={style.box_text}>
                 <View className={style.title_box}>{title}</View>
             </View>
            ):('')

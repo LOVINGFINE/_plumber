@@ -1,16 +1,22 @@
 import React, { Component,useState,useEffect } from 'react'
+import Taro from '@tarojs/taro'
 import {
 View,
 Button,
+Image,
 Input
 } from '@tarojs/components'
 import CodeIpt from './codeIpt'
 import style from './index.module.less'
-import PopUp from '@/components/Pop-ups/index'
+import PopUp from '@/components/Pop-ups/text'
+import {title_img} from '@/assets/model'
 export default ()=>{
       const [login_step,setLoginStep] = useState<number>(1)
       const [code,setCode] = useState<string>('')
       const [pop_show,setPopShow] = useState<boolean>(false)
+      useEffect(()=>{
+            
+      },[])
    const getUserPhone = (e:any)=>{
         console.log(e);
         // 获取手机号回调
@@ -23,6 +29,7 @@ export default ()=>{
    const handleSend = ()=>{
       // 失败弹窗
       // setPopShow(true) 
+      Taro.navigateTo({url:'/pages/user-login/user_name'})
 
    }
    return (<View className={style.box} >
@@ -31,6 +38,9 @@ export default ()=>{
          {
                login_step===1?(
                   <>
+                  <View className={style.title_box}>
+                        <Image src={title_img} className={style.title_icon} />
+                  </View>
                   <View className={style.code_title}>输入网点邀请码</View>
                   <View className={style.code_ipt_box}>
                         <CodeIpt onSuccess={(e)=>onSuccess(e)} />
