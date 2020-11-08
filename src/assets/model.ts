@@ -11,4 +11,5 @@ export {default as search_icon} from './icon/search_icon.png';
 export {default as title_img} from './icon/title_img.png';
 export {default as user_icon} from './icon/user_icon.png';
 export {default as codeError} from './icon/codeError.png';
-
+export {default as his_delete} from './icon/his_delete.png';
+export {default as map_icon} from './icon/map_icon.png';

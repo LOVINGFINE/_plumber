@@ -5,11 +5,14 @@ Button,
 Image
 } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import TabBar from '@/components/custom-tab-bar/index'
 import {user_icon} from '@/assets/model'
 import style from './index.module.less'
 export default ()=>{
-   const [login,setLogin] = useState<boolean>(true)
+   const [login,setLogin] = useState<boolean>(false)
+   const userLogin = ()=>{
+      Taro.navigateTo({url:'/pages/user-login/index'})
+      
+   }
    return (<View className={style.box} >
       <View className={style.message_box}>
              <Image src={user_icon} className={style.message_user_icon} /> 
@@ -23,7 +26,7 @@ export default ()=>{
          </View>
       {
          login?(''):(<View className={style.btn_box}>
-            <Button className={style.btn}>立即登录</Button>
+            <Button className={style.btn} onClick={()=>userLogin()}>立即登录</Button>
          </View>)
       }
    </View>)

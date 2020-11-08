@@ -10,19 +10,7 @@ export default (
 )=>{
     const setNavLink =(e:number)=>{
         setCurrent(e)
-        switch(e){
-          case 0:
-            Taro.switchTab({url:'/pages/tabPage/order/index'})
-           break; 
-          case 1:
-            Taro.switchTab({url:'/pages/tabPage/commission/index'})
-          break; 
-          case 2:
-            Taro.switchTab({url:'/pages/tabPage/myhome/index'})
-          break;
-          default:
-            return  
-        }
+        
     }
     return <AtTabBar
     tabList={[

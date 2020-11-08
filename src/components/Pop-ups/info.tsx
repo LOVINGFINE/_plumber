@@ -4,7 +4,7 @@ interface Iprops {
     show:boolean
     setShow:(e:boolean)=>void
     time?:number,
-    btn_text:string
+    btn_text?:string
 }
 import style from './index.module.less'
 import {
@@ -29,7 +29,7 @@ export default (
                     <View className={style.info_text}>
                         {title}
                     </View>
-                 <View className={style.info_btn} onClick={()=>setShow(false)}>{btn_text}</View>
+                 <View className={style.info_btn} onClick={()=>setShow(false)}>{btn_text?btn_text:'我知道了'}</View>
                 </View>
             </View>
            ):('')

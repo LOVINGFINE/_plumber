@@ -47,5 +47,49 @@
   "compileType": "miniprogram",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
-  "condition": {}
+  "condition": {
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "gamePlugin": {
+      "list": []
+    },
+    "miniprogram": {
+      "list": [
+        {
+          "name": "安装产品",
+          "pathName": "pages/product/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "验证码",
+          "pathName": "pages/user-login/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "输入名字",
+          "pathName": "pages/user-login/user_name",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/first/index",
+          "pathName": "pages/first/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/tabPage/order/detail",
+          "pathName": "pages/tabPage/order/detail",
+          "query": "",
+          "scene": null
+        }
+      ]
+    }
+  }
 }

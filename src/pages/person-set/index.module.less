@@ -28,6 +28,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
     .name_item_lebal {
         width: 25%;
         font-weight: Bold;
@@ -37,6 +38,62 @@
         width: 70%;
         text-align: right;
         font-size: 30px;
-        color: #333;
+        color: #666;
     }
+}
+.avator_img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+// 
+.ipt_box {
+    width: 100%;
+    background-color: #fff;
+    position: relative;
+    height: 100vh;
+    padding: 0 30px;
+    box-sizing: border-box;
+}
+.ipt_btn_box {
+    width: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 40px;
+    padding: 0 30px;
+    left: 0;
+    .ipt_btn {
+        background-color: #003BA5;
+        border-radius: 15px;
+        font-size: 28px;
+        color: #fff;
+        height: 80px;
+        line-height: 80px;
+        width: 100%;
+        box-shadow: 2px 2px 2px #003BA5;
+    }
+}
+.get_code {
+    position: absolute;
+    right: 0;
+    height: 50px;
+    padding: 0 12px;
+    line-height: 50px;
+    background-color: #003BA5;
+    color: #fff;
+    font-size: 24px;
+    border-radius: 10px;
+    z-index: 100;
+}
+.not_get {
+    position: absolute;
+    right: 0;
+    height: 50px;
+    line-height: 50px;
+    padding: 0 12px;
+    background-color: #A8A8A8;
+    color: #fff;
+    font-size: 24px;
+    border-radius: 10px;
 }

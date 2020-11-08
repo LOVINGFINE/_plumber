@@ -11,7 +11,6 @@ import style from './index.module.less'
 import CheckEmpty from '@/components/empty'
 import OrderList from './components/order_list'
 import {Ilist} from './type'
-import TabBar from '@/components/custom-tab-bar/index'
 import {search_icon,warning,order_bg} from '@/assets/model'
 export default ()=>{
    const [list,setList] = useState<Array<Ilist>>([

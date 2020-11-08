@@ -1,13 +1,16 @@
 import React, { useState,useEffect } from 'react'
 import {
 View,
-Image,
-Button
+Image
 } from '@tarojs/components'
+import Taro from '@tarojs/taro'
 import style from '../index.module.less'
 import {Ilist,Il} from '../type'
 import {order_bg} from '@/assets/model'
 export default ({list}:Il)=>{
+   const goDetail = (id)=>{
+       Taro.navigateTo({url:'pages/tabPage/order/detail?id='+id})
+   }
    return (<>
    {
      list.map((ele:Ilist)=>{
@@ -42,7 +45,7 @@ export default ({list}:Il)=>{
                 <Image src={order_bg} className={style.order_bg} />
                 </View>
                 <View className={style.item_bottom}>
-                     <View className={style.item_bottom_btn}>查看详情</View>
+                     <View className={style.item_bottom_btn} onClick={()=>goDetail(ele.id)}>查看详情</View>
                 </View>
           </View>
      })
