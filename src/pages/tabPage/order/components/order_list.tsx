@@ -9,7 +9,7 @@ import {Ilist,Il} from '../type'
 import {order_bg} from '@/assets/model'
 export default ({list}:Il)=>{
    const goDetail = (id)=>{
-       Taro.navigateTo({url:'pages/tabPage/order/detail?id='+id})
+       Taro.navigateTo({url:'/pages/tabPage/order/detail?id='+id})
    }
    return (<>
    {

@@ -149,11 +149,11 @@ export default ()=>{
             steps===0?(<View style={{padding:'0 15px',boxSizing:'border-box'}}>
             <View className={style.name_ipt_item}>
             <View className={style.name_item_lebal}>凭证码</View>
-            <Input className={style.name_item_text} placeholder='请输入凭证码' value={code} onInput={(e)=>targetChange(e.detail.value,setCode)} />
+            <Input className={style.name_item_text} style={{textAlign:'right'}} placeholder='请输入凭证码' value={code} onInput={(e)=>targetChange(e.detail.value,setCode)} />
             </View>
             <View className={style.name_ipt_item}>
                <View className={style.name_item_lebal}>贡献分收入手机号</View>
-               <Input className={style.name_item_text} placeholder='贡献分收入手机号' value={phone} onInput={(e)=>targetChange(e.detail.value,setPhone)} />
+               <Input className={style.name_item_text}  style={{textAlign:'right'}} placeholder='贡献分收入手机号' value={phone} onInput={(e)=>targetChange(e.detail.value,setPhone)} />
             </View>
             </View>):(<>
             <View style={{padding:'0 15px',boxSizing:'border-box'}}>

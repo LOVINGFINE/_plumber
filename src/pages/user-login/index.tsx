@@ -30,7 +30,12 @@ export default ()=>{
             // 用户名密码登录
             if(accout.username==='admin'&&accout.password==='1234'){
                   // 登录成功
-                  Taro.navigateBack({delta:1})
+                  Taro.setStorageSync('login',true)
+                  Taro.setStorageSync('user',{
+                        name:'张三',
+                        phone:'11111111111'
+                  })
+                  Taro.reLaunch({url:'/pages/first/index'})  
             }else {
                   // 登录失败
                   errorMessage('用户名或者密码错误，请重新输入')
@@ -39,7 +44,12 @@ export default ()=>{
               // 手机验证码登录
               
               if(tel.phone==='11111111111'&&tel.code==='000000'){
-                  Taro.reLaunch({url:'/pages/first/index'})   
+                  Taro.setStorageSync('login',true)
+                    Taro.setStorageSync('user',{
+                          name:'张三',
+                          phone:'11111111111'
+                    })
+                  Taro.reLaunch({url:'/pages/first/index'})  
               }else {
                   // 登录失败
                   errorMessage('手机号或者验证码输入错误')

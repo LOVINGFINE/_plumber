@@ -33,6 +33,14 @@ export default ()=>{
          }
       })
    }
+   const logoutUser = ()=>{
+      Taro.setStorageSync('login',false)
+                    Taro.setStorageSync('user',{
+                          name:'',
+                          phone:''
+                    })
+                    Taro.reLaunch({url:'/pages/first/index'})  
+   }
    return (<View className={style.username_box} >
          <PopUp show={pop_show} setShow={setPopShow} title={'邀请码不存在,请重新输入'} />
          <View style={{padding:'0 15px',boxSizing:'border-box',width:'100%',backgroundColor:'#fff'}}>
@@ -45,14 +53,14 @@ export default ()=>{
          </View>
          <View className={style.name_ipt_item}>
             <View className={style.name_item_lebal}>账号昵称</View>
-            <View style={{display:'flex',alignItems:'center',flex:'auto',justifyContent:'flex-end'}}>
+            <View style={{display:'flex',alignItems:'center',flex:'auto',justifyContent:'flex-end'}} onClick={()=>Taro.navigateTo({url:'/pages/person-set/name'})}>
             <View className={style.name_item_text}>{name}</View>
             <AtIcon value='chevron-right'  size='15' color='#A8A8A8' />
             </View>
          </View>
          <View className={style.name_ipt_item}>
             <View className={style.name_item_lebal}>绑定手机号</View>
-            <View style={{display:'flex',alignItems:'center',flex:'auto',justifyContent:'flex-end'}}>
+            <View style={{display:'flex',alignItems:'center',flex:'auto',justifyContent:'flex-end'}} onClick={()=>Taro.navigateTo({url:'/pages/person-set/phone'})}>
             <View className={style.name_item_text}>{phone}</View>
             <AtIcon value='chevron-right'  size='15' color='#A8A8A8' />
             </View>
@@ -74,7 +82,7 @@ export default ()=>{
          </View>
          </View>
          <View className={style.btn_box} style={{marginTop:'30px'}}>
-            <Button className={style.btn}>退出登录</Button>
+            <Button className={style.btn} onClick={()=>logoutUser()}>退出登录</Button>
          </View>
    </View>)
   }
