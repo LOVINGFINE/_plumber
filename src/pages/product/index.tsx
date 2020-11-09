@@ -24,20 +24,20 @@ export default ()=>{
    // 
    const [pro_list,setProList] = useState<Array<any>>([
       {
-         name:'台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯',
+         name:'台灯',
          type_name:'台灯',
-         id:'dsasd2ad222',
+         id:'76731547',
          num:3232
       },
       {
-         name:'台灯台灯台灯台灯台灯台灯台',
-         id:'dsasd2222',
+         name:'吸顶灯',
+         id:'84675357',
          type_name:'台灯',
          num:3232
       },
       {
-         name:'台灯台灯台灯台灯',
-         id:'dsasd2ds2222',
+         name:'LED灯',
+         id:'84675350',
          type_name:'台灯',
          num:3232
       }

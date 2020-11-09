@@ -28,12 +28,12 @@ export default ()=>{
    const handleUserLogin = ()=>{
         if(login_type){
             // 用户名密码登录
-            if(accout.username==='admin'&&accout.password==='1234'){
+            if(accout.username==='15152241655'&&accout.password==='123456'){
                   // 登录成功
                   Taro.setStorageSync('login',true)
                   Taro.setStorageSync('user',{
-                        name:'张三',
-                        phone:'11111111111'
+                        name:'李云龙',
+                        phone:'15152241655'
                   })
                   Taro.reLaunch({url:'/pages/first/index'})  
             }else {
@@ -43,11 +43,11 @@ export default ()=>{
         }else {
               // 手机验证码登录
               
-              if(tel.phone==='11111111111'&&tel.code==='000000'){
+              if(tel.phone==='15152241655'&&tel.code==='123456'){
                   Taro.setStorageSync('login',true)
                     Taro.setStorageSync('user',{
-                          name:'张三',
-                          phone:'11111111111'
+                          name:'李云龙',
+                          phone:'15152241655'
                     })
                   Taro.reLaunch({url:'/pages/first/index'})  
               }else {

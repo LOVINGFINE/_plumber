@@ -16,21 +16,21 @@ export default ()=>{
     custom_address:'上海市 徐汇区 xx路 xx号',
     pro_list:[
         {
-           name:'台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯台灯',
+           name:'台灯',
            type_name:'台灯',
-           id:'dsasd2ad222',
+           id:'76731547',
            num:3232
         },
         {
-           name:'台灯台灯台灯台灯台灯台灯台',
-           id:'dsasd2222',
-           type_name:'台灯',
+           name:'吸顶灯',
+           id:'84675357',
+           type_name:'吸顶灯',
            num:3232
         },
         {
-           name:'台灯台灯台灯台灯',
-           id:'dsasd2ds2222',
-           type_name:'台灯',
+           name:'LED灯',
+           id:'84675350',
+           type_name:'LED灯',
            num:3232
         }
      ],
