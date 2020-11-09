@@ -99,7 +99,7 @@ export default ()=>{
    const cancelSearch = ()=>{
       setText('')
       setFocus(false)
-      setHistory(true)
+      Taro.navigateBack({delta:1})
    }
    const handleSearch = (key:string)=>{
          // 搜索

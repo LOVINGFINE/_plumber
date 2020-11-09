@@ -14,78 +14,78 @@ import {Ilist} from './type'
 import {search_icon,warning,order_bg} from '@/assets/model'
 export default ()=>{
    const [list,setList] = useState<Array<Ilist>>([
-        {
-             id:45,
-             name: '张大宝',
-             phone: '12222222',
-             address: '上海市 徐汇区 xx路 xx号',
-             pros: [{
-                 name: '吊灯',
-                 id: '4453545354'
-               },
-               {
-                 name: '吊灯',
-                 id: '4453545354'
-               },
-               {
-                 name: '吊灯',
-                 id: '4453545354'
-               }, {
-                 name: '吊灯',
-                 id: '4453545354'
-               }
-             ],
-             pro_points: 1344,
-             installTime: '2020-10-09 12:34:89',
-        },
-        {
-          id:46,
-          name: '张大宝',
-          phone: '12222222',
-          address: '上海市 徐汇区 xx路 xx号',
-          pros: [{
-              name: '吊灯',
-              id: '4453545354'
-            },
-            {
-              name: '吊灯',
-              id: '4453545354'
-            },
-            {
-              name: '吊灯',
-              id: '4453545354'
-            }, {
-              name: '吊灯',
-              id: '4453545354'
-            }
-          ],
-          pro_points: 1344,
-          installTime: '2020-10-09 12:34:89',
-     },
-     {
-          id:48,
-          name: '张大宝',
-          phone: '12222222',
-          address: '上海市 徐汇区 xx路 xx号',
-          pros: [{
-              name: '吊灯',
-              id: '4453545354'
-            },
-            {
-              name: '吊灯',
-              id: '4453545354'
-            },
-            {
-              name: '吊灯',
-              id: '4453545354'
-            }, {
-              name: '吊灯',
-              id: '4453545354'
-            }
-          ],
-          pro_points: 1344,
-          installTime: '2020-10-09 12:34:89',
-     }
+    //     {
+    //          id:45,
+    //          name: '张大宝',
+    //          phone: '12222222',
+    //          address: '上海市 徐汇区 xx路 xx号',
+    //          pros: [{
+    //              name: '吊灯',
+    //              id: '4453545354'
+    //            },
+    //            {
+    //              name: '吊灯',
+    //              id: '4453545354'
+    //            },
+    //            {
+    //              name: '吊灯',
+    //              id: '4453545354'
+    //            }, {
+    //              name: '吊灯',
+    //              id: '4453545354'
+    //            }
+    //          ],
+    //          pro_points: 1344,
+    //          installTime: '2020-10-09 12:34:89',
+    //     },
+    //     {
+    //       id:46,
+    //       name: '张大宝',
+    //       phone: '12222222',
+    //       address: '上海市 徐汇区 xx路 xx号',
+    //       pros: [{
+    //           name: '吊灯',
+    //           id: '4453545354'
+    //         },
+    //         {
+    //           name: '吊灯',
+    //           id: '4453545354'
+    //         },
+    //         {
+    //           name: '吊灯',
+    //           id: '4453545354'
+    //         }, {
+    //           name: '吊灯',
+    //           id: '4453545354'
+    //         }
+    //       ],
+    //       pro_points: 1344,
+    //       installTime: '2020-10-09 12:34:89',
+    //  },
+    //  {
+    //       id:48,
+    //       name: '张大宝',
+    //       phone: '12222222',
+    //       address: '上海市 徐汇区 xx路 xx号',
+    //       pros: [{
+    //           name: '吊灯',
+    //           id: '4453545354'
+    //         },
+    //         {
+    //           name: '吊灯',
+    //           id: '4453545354'
+    //         },
+    //         {
+    //           name: '吊灯',
+    //           id: '4453545354'
+    //         }, {
+    //           name: '吊灯',
+    //           id: '4453545354'
+    //         }
+    //       ],
+    //       pro_points: 1344,
+    //       installTime: '2020-10-09 12:34:89',
+    //  }
    ])
    return (<View className={style.box} >
            <View className={style.top}>
@@ -101,6 +101,7 @@ export default ()=>{
               <OrderList list={list} />
              </CheckEmpty>
              </View>
+             <View style={{height:'60px'}} />
            </ScrollView>
    </View>)
   }

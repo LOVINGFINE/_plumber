@@ -9,8 +9,8 @@ export default {
     'pages/tabPage/order/search',
     'pages/tabPage/order/detail',
     'pages/user-login/index',
-    'pages/user-register/user_name',
-    'pages/user-register/index',
+    'pages/user-login-code/user_name',
+    'pages/user-login-code/index',
     'pages/product/index',
    
     'pages/product/codeError',

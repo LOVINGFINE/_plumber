@@ -14,7 +14,7 @@ export default ()=>{
       phone:''
    })
    const userLogin = ()=>{
-      Taro.navigateTo({url:'/pages/user-login/index'})
+      Taro.navigateTo({url:'/pages/user-login-code/index'})
       
    }
    useEffect(()=>{

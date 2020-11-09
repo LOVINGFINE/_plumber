@@ -197,10 +197,12 @@ export default ()=>{
                         </View>
                      })
                 }
+                
             </View>
             <View className={style.pro_btn_box}>
                <Button className={style.pro_btn} onClick={()=>findCodeView()}>+添加</Button>
             </View>
+            <View style={{height:'60px'}}></View>
            </ScrollView>
                </>)
          }

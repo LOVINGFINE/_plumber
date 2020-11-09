@@ -43,7 +43,7 @@ export default ()=>{
         }else {
               // 手机验证码登录
               
-              if(tel.phone==='15152241655'&&tel.code==='123456'){
+              if(tel.phone==='11111111111'&&tel.code==='123456'){
                   Taro.setStorageSync('login',true)
                     Taro.setStorageSync('user',{
                           name:'李云龙',
