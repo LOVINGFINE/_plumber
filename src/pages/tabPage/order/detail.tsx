@@ -47,14 +47,14 @@ export default ()=>{
    },[])
   
    return (<View className={style.box} >
-         <View style={{padding:'20px 15px',boxSizing:'border-box',backgroundColor:'#fff',marginBottom:'10px'}}>
+         <View style={{padding:'20px 15px 0 15px',boxSizing:'border-box',backgroundColor:'#fff',marginBottom:'10px'}}>
             <View className={style.detail_title}>业主信息</View>
-            <View className={style.name_ipt_item}>
+            <View className={style.name_ipt_item} style={{border:'none'}}>
                <View className={style.name_item_lebal}>业主姓名:</View>
                <View  className={style.name_item_text}>{order_data.custom_name}</View>
                
             </View>
-            <View className={style.name_ipt_item}>
+            <View className={style.name_ipt_item} style={{border:'none'}}>
                <View className={style.name_item_lebal}>业主电话:</View>
                <View  className={style.name_item_text}>{order_data.custom_tel}</View>
             </View>
@@ -63,37 +63,33 @@ export default ()=>{
                <View  className={style.name_item_text}>{order_data.custom_address}</View>
             </View>
          </View>
-         <View style={{padding:'20px 15px',boxSizing:'border-box',backgroundColor:'#fff',marginBottom:'10px'}}>
+         <View style={{padding:'20px 15px 0 15px',boxSizing:'border-box',backgroundColor:'#fff',marginBottom:'10px'}}>
             <View className={style.detail_title}>安装信息</View>
             <View className={style.name_pro_item}>
-               <View className={style.name_pro_lebal}>商品名称</View>
+               <View className={style.name_pro_lebal}>安装商品:</View>
                <View  className={style.name_pro_content}>
                    {
                        order_data.pro_list.map((ele=>{
                            return <View className={style.pro_list_item} key={ele.id}>
                                <View className={style.pro_list_item_title}>{ele.name}</View>
                                <View className={style.pro_list_item_dec}>
-                                   <View style={{marginRight:'6px'}}>ID: {ele.id}</View>
-                                   <View>贡献分: {ele.num}</View>
+                                   <View style={{marginRight:'6px'}}>ID:{ele.id}</View>
+                                   <View>￥ {ele.num}</View>
                                 </View>
                            </View>
                        }))
                    }
                </View>
             </View>
-            <View className={style.name_ipt_item}>
-               <View className={style.name_item_lebal}>商品总贡献分</View>
-               <View  className={style.name_item_text}>{total_num}</View>
-            </View>
             <View className={style.name_ipt_item} style={{border:'none'}}>
-               <View className={style.name_item_lebal}>安装水电工</View>
-               <View  className={style.name_item_text} style={{color:'#1F8EFF'}}>{order_data.plumper_name + ' ' + order_data.plumper_phone}</View>
+               <View className={style.name_item_lebal}>商品总金额</View>
+               <View  className={style.name_item_text} style={{paddingRight:'30px'}}>￥ {total_num}</View>
             </View>
          </View>
          <View style={{padding:'20px 15px',boxSizing:'border-box',backgroundColor:'#fff',marginBottom:'10px'}}>
             <View className={style.detail_title}>订单信息</View>
             <View className={style.name_ipt_item} style={{border:'none'}}>
-               <View className={style.name_item_lebal}>生成时间</View>
+               <View className={style.name_item_lebal}>安装时间</View>
                <View  className={style.name_item_text}>{order_data.createTime}</View>
                
             </View>

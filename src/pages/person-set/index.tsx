@@ -10,6 +10,7 @@ Image
 import style from './index.module.less'
 import PopUp from '@/components/Pop-ups/text'
 import {user_icon} from '@/assets/model'
+import {Picker} from '@tarojs/components'
 export default ()=>{
       const [name,setName] = useState<string>('1号网点上海市徐汇区')
       const [phone,setPhone] = useState<string>('1552220000')
@@ -34,7 +35,7 @@ export default ()=>{
       })
    }
    const logoutUser = ()=>{
-      Taro.setStorageSync('login',false)
+      Taro.setStorageSync('token','')
                     Taro.setStorageSync('user',{
                           name:'',
                           phone:''
@@ -67,7 +68,9 @@ export default ()=>{
          </View>
          <View className={style.name_ipt_item}>
             <View className={style.name_item_lebal}>阳历生日</View>
-            <Input className={style.name_item_text} value={time} />
+            <Picker mode='date' className={style.name_item_text} value={time} onChange={(e)=>setTime(e.detail.value)}>
+                 <View >{time===''?'请选择日期':time}</View>
+            </Picker>
          </View>
          <View className={style.name_ipt_item}>
             <View className={style.name_item_lebal}>阴历生日</View>

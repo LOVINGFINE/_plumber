@@ -1,10 +1,9 @@
 export default {
   pages: [
-    'pages/first/index',
     'pages/person-set/index',
+    'pages/first/index',
     'pages/person-set/phone',
     'pages/person-set/name',
-    
     'pages/product/mapView',
     'pages/tabPage/order/search',
     'pages/tabPage/order/detail',
@@ -12,10 +11,8 @@ export default {
     'pages/user-login-code/user_name',
     'pages/user-login-code/index',
     'pages/product/index',
-   
-    'pages/product/codeError',
-    
-    
+    'pages/codeInfo/codeSuccess',
+    'pages/codeInfo/codeError',
   ],
   permission: {
     'scope.userLocation':{
@@ -26,6 +23,7 @@ export default {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
     navigationBarTitleText: '水电工小程序',
-    navigationBarTextStyle: 'black'
+    navigationBarTextStyle: 'black',
+  
   }
 }

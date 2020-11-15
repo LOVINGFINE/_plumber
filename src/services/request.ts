@@ -1,9 +1,16 @@
-import axios from 'axios';
-import API_PATH from './env'
-axios.defaults.baseURL = API_PATH; //接口地址 本地测试
-axios.defaults.timeout = 20000;
-axios.defaults.headers.post['Content-Type'] = 'application/json';
-axios.interceptors.response.use(
+import axios from 'taro-axios';
+import API_PATH,{ACCESS_TOKEN} from './env'
+// axios.defaults.baseURL = API_PATH; //接口地址 本地测试
+// axios.defaults.timeout = 20000;
+// axios.defaults.headers.post['Content-Type'] = 'application/json';
+let http = axios.create({
+  baseURL : API_PATH,//接口地址 本地测试
+  timeout :20000,
+  headers:{
+  post:{'Content-Type': 'application/json'}
+ }
+})
+http.interceptors.response.use(
   (response) => {
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
@@ -32,9 +39,11 @@ axios.interceptors.response.use(
   },
 );
 
-axios.interceptors.request.use(
+http.interceptors.request.use(
   (config) => { 
-    
+    if(ACCESS_TOKEN!=''){
+      config.headers.common['accessToken'] = ACCESS_TOKEN
+    }
     return config;
   },
   (error) => {
@@ -42,21 +51,20 @@ axios.interceptors.request.use(
   },
 );
 
-export const _get = (url: string) => {
-  return axios.get(url);
+export const  _get = async (url: string) => {
+  let res = await axios.get(url);
+  return  res.data
 };
-export const _delete = (url: string,data?:any) => {
-  if(data){
-    return axios.delete(url,data);
-    
-  }else {
-    return axios.delete(url);
-  }
+export const _delete = async(url: string) => {
+  let res = await axios.delete(url);
+  return  res.data
 };
-export const _post = (url: string, data?: any) => {
-  return axios.post(url, data);
+export const _post = async (url: string, data?: any) => {
+  let res = await axios.post(url, data);
+  return  res.data
 };
-export const _put = (url: string, data?: any) => {
-  return axios.put(url, data);
+export const _put = async (url: string, data?: any) => {
+  let res = await axios.put(url, data);
+  return  res.data
 };
-export default axios
+export default http

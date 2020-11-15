@@ -4,7 +4,7 @@
   "description": "水电安装小程序",
   "appid": "wx517adc58711b0a60",
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "es6": false,
     "enhance": false,
     "postcss": true,
@@ -86,6 +86,12 @@
         {
           "name": "pages/tabPage/order/detail",
           "pathName": "pages/tabPage/order/detail",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/codeInfo/codeError",
+          "pathName": "pages/codeInfo/codeError",
           "query": "",
           "scene": null
         }

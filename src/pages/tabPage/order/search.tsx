@@ -118,12 +118,10 @@ export default ()=>{
    const deleteHistory= ()=>{
      // 删除历史记录
      Taro.setStorageSync('history',[])
-     console.log(8);
-     
      setHisList([])
    }
    return (<View className={style.ser_box} >
-     <PopModal title={'确定删除历史记录么?'} show={modal_show} handleOk={deleteHistory} handleCancel={()=>setModal(false)}/>
+     <PopModal title={<View style={{lineHeight:'65px',textAlign:'center'}}>确定删除历史记录么?</View>} show={modal_show} handleOk={deleteHistory} handleCancel={()=>setModal(false)}/>
            <View className={style.search_top}>
                <View className={style.search_box}>
                   <Image src={search_icon} className={style.top_search_icon} />

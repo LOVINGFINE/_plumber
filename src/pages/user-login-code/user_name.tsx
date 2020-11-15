@@ -1,5 +1,5 @@
-import React, { Component,useState,useEffect } from 'react'
-import Taro from '@tarojs/taro'
+import React, { useState,useEffect } from 'react'
+import Taro,{getCurrentInstance } from '@tarojs/taro'
 import {
 View,
 Button,
@@ -10,7 +10,8 @@ import style from './index.module.less'
 import PopUp from '@/components/Pop-ups/text'
 import PopInfo from '@/components/Pop-ups/info'
 import checkEmpty from '@/utils/checkEmpty'
-export default ()=>{
+export default (props:any)=>{
+ 
       const [name,setName] = useState<string>('')
       const [time,setTime] = useState<string>('')
       const [time_n,setTimeN] = useState<string>('')
@@ -18,6 +19,10 @@ export default ()=>{
       const [pop_show,setPopShow] = useState<boolean>(false)
       const [warn_text,setWarnText] = useState<string>('')
       const [info_show,setInfoShow] = useState<boolean>(false)
+      const [outletsId, setOutletsId] = useState<string>('')
+      useEffect(()=>{
+         setOutletsId(getCurrentInstance().router.params.id || '')
+      },[])
    const handleSend = ()=>{
       if(checkEmpty([name,time,time_n,address]) || checkEmpty([name,time,time_n,address])===0){
          sendInfo(checkEmpty([name,time,time_n,address]))

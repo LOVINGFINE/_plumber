@@ -1,6 +1,6 @@
-import React, { Component,useState,useEffect } from 'react'
+import React, { useState,useEffect } from 'react'
 import Taro from '@tarojs/taro'
-import { AtIcon } from 'taro-ui'
+import { AtIcon,AtToast  } from 'taro-ui'
 import {
 View,
 Input,
@@ -20,7 +20,7 @@ export default ()=>{
    const [isPost,setIsPost] = useState<boolean>(false)
    const [steps,setSteps] =  useState<number>(0)
    const [modal_type,setModalEle] = useState<any>('tel')
-
+   const [loading,setLoad] = useState<boolean>(false)
    // 
    const [pro_list,setProList] = useState<Array<any>>([
       {
@@ -64,15 +64,19 @@ export default ()=>{
          onlyFromCamera:true,
       }).then((res:any)=>{
           // 扫码成功
+          Taro.navigateTo({url:'/pages/codeInfo/codeSuccess'})
       }).catch(()=>{
          // 扫码失败
+         Taro.navigateTo({url:'/pages/codeInfo/codeError'})
       })
    }
    const postDataSteps = ()=>{
+     
       // 提交数据
       if(isPost){
          // 可以操作
          if(steps===0){
+            setLoad(true)
             setSteps(1)
          }else {
 
@@ -145,6 +149,7 @@ export default ()=>{
         show={modal_show} 
         handleCancel={()=>setModal(false)} 
         handleOk={()=>handleModalOK()} />
+        <AtToast isOpened={loading} text="校验中" hasMask={true} duration={0} status="loading"></AtToast>
          {
             steps===0?(<View style={{padding:'0 15px',boxSizing:'border-box'}}>
             <View className={style.name_ipt_item}>

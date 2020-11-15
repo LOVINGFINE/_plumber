@@ -7,19 +7,27 @@ Input
 } from '@tarojs/components'
 import style from './index.module.less'
 import PopUp from '@/components/Pop-ups/text'
+import {getVerificationCode} from '@/models/user'
 export default ()=>{
-      const [old,setOld] = useState<string>('111111121')
+      const [old,setOld] = useState<string>('')
       const [newVal,setNewVal] = useState<string>('12121212')
       const [pop_show,setPopShow] = useState<boolean>(false)
       const [code,setCode] = useState<string>('')
       const [info_text,setInfoText] = useState<string>('')
       const [time,setTime] = useState<number>(60)
+      useEffect(()=>{
+         let d = Taro.getStorageSync('user') || {phone:''}
+         setOld(d.phone)
+      },[])
    const handleSend = ()=>{
        
     Taro.navigateBack({delta:1})
    }
    const handleCodeSend = ()=>{
-       setCode('000000')
+      getVerificationCode(old).then(res=>{
+         console.log(res);
+         
+      })
    }
    return (<View className={style.username_box} >
          <PopUp show={pop_show} setShow={setPopShow} title={info_text} />

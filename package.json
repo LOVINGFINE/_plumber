@@ -41,10 +41,10 @@
     "@tarojs/react": "3.0.15",
     "@tarojs/runtime": "3.0.15",
     "@tarojs/taro": "3.0.15",
-    "axios": "^0.21.0",
     "lodash": "4.17.15",
     "react": "^16.10.0",
     "react-dom": "^16.10.0",
+    "taro-axios": "^1.1.1",
     "taro-ui": "^3.0.0-alpha.3"
   },
   "devDependencies": {
