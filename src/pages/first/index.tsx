@@ -8,9 +8,11 @@ import Order from '../tabPage/order/index'
 import ComPage from '../tabPage/commission/index'
 import MyHome from '../tabPage/myhome/index'
 import TabBar from '@/components/custom-tab-bar/index'
+import NavBar from '@/components/nav-bar/index'
 import style from './index.module.less'
+import PageLayout from '../../layout/pageLayout'
 export default ()=>{
-      const [current,setCurrent] = useState<number>(2)
+      const [current,setCurrent] = useState<number>(0)
       const [text_show,setShow] = useState<boolean>(false)
       useEffect(()=>{
         if(getCurrentInstance().router.params.isFrist){
@@ -18,10 +20,11 @@ export default ()=>{
         }
       },[])
    return (<View className={style.box} >
-       <PopText title={'注册成功'} show={text_show} setShow={setShow} />
-         <ShowPage current={current} />
-         <TabBar current={current} setCurrent={setCurrent} />
-   </View>)
+    <PopText title={'注册成功'} show={text_show} setShow={setShow} />
+     <ShowPage current={current} />
+     <TabBar current={current} setCurrent={setCurrent} />
+ </View>
+  )
 }
 
 const ShowPage = ({current}:{current:number})=>{

@@ -13,86 +13,17 @@ import OrderList from './components/order_list'
 import {Ilist} from './type'
 import Taro from '@tarojs/taro'
 import {search_icon,his_delete} from '@/assets/model'
+import {searchOrderList} from '@/models/order'
 export default ()=>{
-   const [list,setList] = useState<Array<Ilist>>([
-      {
-           id:45,
-           name: '张大宝',
-           phone: '12222222',
-           address: '上海市 徐汇区 xx路 xx号',
-           pros: [{
-               name: '吊灯',
-               id: '4453545354'
-             },
-             {
-               name: '吊灯',
-               id: '4453545354'
-             },
-             {
-               name: '吊灯',
-               id: '4453545354'
-             }, {
-               name: '吊灯',
-               id: '4453545354'
-             }
-           ],
-           pro_points: 1344,
-           installTime: '2020-10-09 12:34:89',
-      },
-      {
-        id:46,
-        name: '张大宝',
-        phone: '12222222',
-        address: '上海市 徐汇区 xx路 xx号',
-        pros: [{
-            name: '吊灯',
-            id: '4453545354'
-          },
-          {
-            name: '吊灯',
-            id: '4453545354'
-          },
-          {
-            name: '吊灯',
-            id: '4453545354'
-          }, {
-            name: '吊灯',
-            id: '4453545354'
-          }
-        ],
-        pro_points: 1344,
-        installTime: '2020-10-09 12:34:89',
-   },
-   {
-        id:48,
-        name: '张大宝',
-        phone: '12222222',
-        address: '上海市 徐汇区 xx路 xx号',
-        pros: [{
-            name: '吊灯',
-            id: '4453545354'
-          },
-          {
-            name: '吊灯',
-            id: '4453545354'
-          },
-          {
-            name: '吊灯',
-            id: '4453545354'
-          }, {
-            name: '吊灯',
-            id: '4453545354'
-          }
-        ],
-        pro_points: 1344,
-        installTime: '2020-10-09 12:34:89',
-   }
- ])
+   const [list,setList] = useState<Array<Ilist>>([])
    const [isFocus,setFocus] = useState<boolean>(false)
    const [modal_show,setModal] = useState<boolean>(false)
    const [text,setText] = useState<string>('')
    const [history,setHistory] = useState<boolean>(false)
    const [h_list,setHisList] = useState<Array<string>>([])
+   const [page, setPage] = useState<number>(1);
+   const [refresh, setRefresh] = useState<boolean>(false);
+   const [more, setMore] = useState<boolean>(false);
    useEffect(()=>{
      setHisList(Taro.getStorageSync('history') || []) 
    },[])
@@ -106,11 +37,9 @@ export default ()=>{
          setHistory(false)
          let l = h_list
          if(l.findIndex(ele=>ele===key)!=-1||l.findIndex(ele=>ele===key)===0){
-                
+          onPageChange(page)
          }else {
             l.push(key)
-            console.log(1);
-            
             Taro.setStorageSync('history',l)
             setHisList([...l])
          }
@@ -120,6 +49,27 @@ export default ()=>{
      Taro.setStorageSync('history',[])
      setHisList([])
    }
+   const onPageChange = (p: number) => {
+    setPage(p);
+     searchOrderList(p,text).then(res=>{
+         if(res.code===200){
+          
+           let {data} = res
+           if(p===1){
+            setRefresh(false);
+             // 刷新
+             setList(data)
+           }else {
+            setMore(false);
+             // 加载更多
+           }
+         }
+     })
+    setTimeout(() => {
+      
+     
+    }, 3000);
+  };
    return (<View className={style.ser_box} >
      <PopModal title={<View style={{lineHeight:'65px',textAlign:'center'}}>确定删除历史记录么?</View>} show={modal_show} handleOk={deleteHistory} handleCancel={()=>setModal(false)}/>
            <View className={style.search_top}>
@@ -139,7 +89,22 @@ export default ()=>{
                </View>
                <View className={style.search_cancel} onClick={cancelSearch}>取消</View>
            </View>
-           <ScrollView scrollY className={style.ser_main}>
+           <ScrollView
+            refresherEnabled
+            refresherTriggered={refresh}
+            refresherBackground="#F8F8F8"
+            refresherThreshold={60}
+            lowerThreshold={10}
+            onRefresherRefresh={() => {
+              setRefresh(true);
+              onPageChange(1);
+            }}
+            onScrollToLower={() => {
+              setMore(true);
+              onPageChange(page + 1);
+            }}
+            scrollY
+            className={style.ser_main}>
            {
               history?(
                 <View className={style.his_box}>

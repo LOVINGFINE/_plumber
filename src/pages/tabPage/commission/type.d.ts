@@ -1,7 +1,7 @@
 export interface Clist {
-    id:string
-    createTime:string
-    address:string
-    bossName:string
-    num:number
+    money: number,
+	outletsAddress: string,
+	outletsId: number,
+	outletsName: string,
+	reflectTime: number
 }

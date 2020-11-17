@@ -4,7 +4,7 @@ View,
 Text
 } from '@tarojs/components'
 import style from '../index.module.less'
-
+import {filterTime} from '@/utils/filter'
 import { Clist } from '../type'
 export default ({
     time,
@@ -16,13 +16,13 @@ export default ({
         <View style={{width:'100%',padding:'6px 15px 0',boxSizing:'border-box'}}>
         {
             list.map((ele:Clist)=>{
-                return <View key={ele.id} className={style.com_item}>
+                return <View key={ele.reflectTime} className={style.com_item}>
                     <View className={style.com_item_time}>
-                       <Text>{ele.createTime}</Text>
-                       <Text style={{fontSize:'20px'}}>{ele.num}</Text>
+                       <Text>{filterTime(ele.reflectTime)}</Text>
+                       <Text style={{fontSize:'20px'}}>{ele.money}</Text>
                     </View>
-                    <View className={style.com_item_text}>{ele.address}</View>
-                    <View className={style.com_item_text}>老板姓名:  {ele.bossName}</View>
+                    <View className={style.com_item_text}>{ele.outletsAddress}</View>
+                    <View className={style.com_item_text}>老板姓名:  {ele.outletsName}</View>
                 </View>
             })
         }

@@ -42,6 +42,7 @@
     "@tarojs/runtime": "3.0.15",
     "@tarojs/taro": "3.0.15",
     "lodash": "4.17.15",
+    "moment": "^2.29.1",
     "react": "^16.10.0",
     "react-dom": "^16.10.0",
     "taro-axios": "^1.1.1",

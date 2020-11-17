@@ -1,18 +1,25 @@
 export interface Ilist {
-     id:number,
-     name:string
-     phone:string
-     address:string
-     pros:Array<TPro>
-     pro_points:number
-     installTime:string
+    address: string
+	goodsList: TPro[],
+	hyName: string
+	hyPhone: string
+	hyUserId: number,
+	id: number,
+	installStatus: number,
+	money: number,
+	name: string
+	orderCreateTime: number,
+	orderUpdateTime: number,
+	outletsId: number,
+	outletsName: string
+	phone: string
 } 
 
 export interface TPro {
-    name:string
-    id:string
-}
-
-export interface Il {
-    list:Array<Ilist>
+    bcn: string
+	code: string
+	ct: number,
+	name: string,
+	pr: number,
+	scn: string
 }

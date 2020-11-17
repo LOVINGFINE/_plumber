@@ -13,49 +13,33 @@ import PopModal from '@/components/Pop-ups/modal'
 import style from './style.module.less'
 import {map_icon} from '@/assets/model'
 import CheckEmpty from '@/components/empty'
+import {postCodeUser} from '@/models/order'
+import {TPro} from '../tabPage/order/type'
 export default ()=>{
    
    const [info_show,setInfo] = useState<boolean>(false)
+   const [info_text,setInfoText] = useState<string>('')
    const [modal_show,setModal] = useState<boolean>(false)
    const [isPost,setIsPost] = useState<boolean>(false)
-   const [steps,setSteps] =  useState<number>(0)
+   const [steps,setSteps] =  useState<number>(1)
    const [modal_type,setModalEle] = useState<any>('tel')
    const [loading,setLoad] = useState<boolean>(false)
    // 
-   const [pro_list,setProList] = useState<Array<any>>([
-      {
-         name:'台灯',
-         type_name:'台灯',
-         id:'76731547',
-         num:3232
-      },
-      {
-         name:'吸顶灯',
-         id:'84675357',
-         type_name:'台灯',
-         num:3232
-      },
-      {
-         name:'LED灯',
-         id:'84675350',
-         type_name:'台灯',
-         num:3232
-      }
-   ])
+   const [pro_list,setProList] = useState<Array<TPro>>([])
    const [delete_id,setDeleteId] = useState<string>('')
    const [total_num,setTotal] = useState<number>(0)
   /**
    * 表单数据
    */
-   const [code,setCode] = useState<string>('')
-   const [phone,setPhone] = useState<string>('')
+   const [code,setCode] = useState<string>('292080')
+   const [phone,setPhone] = useState<string>('15000558033')
    const [custom_name,setCostomName] = useState<string>('')
    const [custom_tel,setCostomTel] = useState<string>('')
    const [custom_address,setCustomAddress] = useState<string>('')
    useEffect(()=>{
       let n = 0
       pro_list.forEach(ele=>{
-         n+=ele.num
+         n+=ele.pr
       })
       setTotal(n)
    },[pro_list])
@@ -75,9 +59,22 @@ export default ()=>{
       // 提交数据
       if(isPost){
          // 可以操作
+         //  setSteps(1)
+         setLoad(true)
          if(steps===0){
-            setLoad(true)
-            setSteps(1)
+            postCodeUser({code,phone}).then(res=>{
+               let {code,data,message} = res
+               if(code===-1){
+                  setLoad(false)
+                  setInfoBox(message)
+               }else {
+                  console.log(data);
+                  
+                  // setSteps(1)
+               }
+               
+            })
+            
          }else {
 
          }
@@ -92,9 +89,9 @@ export default ()=>{
    const targetChange = (value:string,fun:(e:any)=>void)=>{
           fun(value)
         if(steps===0){
-         if(code!=''){
-            setIsPost(true)
-         }
+         setIsPost(code!=''&&phone!='')
+        }else {
+
         }
    }
    const handleModalShow = (e)=>{
@@ -142,8 +139,12 @@ export default ()=>{
    const handleMapShow = ()=>{
       Taro.navigateTo({url:'/pages/product/mapView'})
    }
+   const setInfoBox = (text:string)=>{
+       setInfoText(text)
+       setInfo(true)
+   }
    return (<View className={style.box} >
-        <PopInfo show={info_show} setShow={setInfo} btn_text='我知道了' title='凭证码错误请重新输入凭证码' time={10} />
+        <PopInfo show={info_show} setShow={setInfo}  title={info_text} time={10} />
         <PopModal 
         title={handleModalShow(modal_type)}
         show={modal_show} 
@@ -154,11 +155,11 @@ export default ()=>{
             steps===0?(<View style={{padding:'0 15px',boxSizing:'border-box'}}>
             <View className={style.name_ipt_item}>
             <View className={style.name_item_lebal}>凭证码</View>
-            <Input className={style.name_item_text} style={{textAlign:'right'}} placeholder='请输入凭证码' value={code} onInput={(e)=>targetChange(e.detail.value,setCode)} />
+            <Input className={style.name_ipt_text}  placeholder='请输入凭证码' value={code} onInput={(e)=>targetChange(e.detail.value,setCode)} />
             </View>
             <View className={style.name_ipt_item}>
                <View className={style.name_item_lebal}>贡献分收入手机号</View>
-               <Input className={style.name_item_text}  style={{textAlign:'right'}} placeholder='贡献分收入手机号' value={phone} onInput={(e)=>targetChange(e.detail.value,setPhone)} />
+               <Input className={style.name_ipt_text}   placeholder='贡献分收入手机号' value={phone} onInput={(e)=>targetChange(e.detail.value,setPhone)} />
             </View>
             </View>):(<>
             <View style={{padding:'0 15px',boxSizing:'border-box'}}>
@@ -185,19 +186,19 @@ export default ()=>{
             <ScrollView scrollY className={style.pro_main}>
             <View style={{padding:'0 15px',boxSizing:'border-box'}}>
                 {
-                     pro_list.map((ele:any)=>{
-                        return <View className={style.pro_item} key={ele.id}>
-                               <View className={style.pro_item_type}>{ele.type_name}:</View>
+                     pro_list.map((ele:TPro)=>{
+                        return <View className={style.pro_item} key={ele.code}>
+                               <View className={style.pro_item_type}>{ele.bcn}:</View>
                                  <View className={style.pro_item_name} >
                                     <View style={{width:'284px'}}>{ele.name}</View>
                                     <View className={style.pro_delete_text} onClick={()=>{
-                                       setDeleteId(ele.id)
+                                       setDeleteId(ele.code)
                                        clickModal('delete')
                                     }}>删除</View>
                                  </View>
                                <View className={style.pro_item_bottom}>
-                                 <View style={{marginRight:'12px'}}>ID: {ele.id}</View>
-                                  <View>贡献分 {ele.num}</View>
+                                 <View style={{marginRight:'12px'}}>ID: {ele.code}</View>
+                                  <View>商品价格 {ele.pr}</View>
                                </View>
                         </View>
                      })
@@ -212,7 +213,7 @@ export default ()=>{
                </>)
          }
          <CheckEmpty isShow={total_num>0&&steps!=0} empty_ele={<View />} >
-            <View className={style.num_show_text}>商品总贡献分: {total_num}</View>
+            <View className={style.num_show_text}>商品总金额: {total_num}</View>
          </CheckEmpty>
          <View className={style.bottom_btn_box} >
             <Button className={style.bottom_btn} style={isPost?{}:{

@@ -5,9 +5,10 @@ Image
 } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import style from '../index.module.less'
-import {Ilist,Il} from '../type'
+import {Ilist} from '../type'
 import {order_bg} from '@/assets/model'
-export default ({list}:Il)=>{
+import {filterTime} from '@/utils/filter'
+export default ({list}:{list:Array<Ilist>})=>{
    const goDetail = (id)=>{
        Taro.navigateTo({url:'/pages/tabPage/order/detail?id='+id})
    }
@@ -31,15 +32,15 @@ export default ({list}:Il)=>{
                     </View>
                     <View className={style.item_message}>
                        <View className={style.item_message_lebal}>安装商品</View>
-                       <View className={style.item_message_text}>{ele.pros.length>0?`${ele.pros[0].name} ID${ele.pros[0].id}...等${ele.pros.length}件商品`:'暂无信息'}</View>
+                       <View className={style.item_message_text}>{ele.goodsList.length>0?`${ele.goodsList[0].name} ID${ele.goodsList[0].code}...等${ele.goodsList.length}件商品`:'暂无信息'}</View>
                     </View>
                     <View className={style.item_message}>
                        <View className={style.item_message_lebal}>商品贡献分</View>
-                       <View className={style.item_message_text}>{ele.pro_points}</View>
+                       <View className={style.item_message_text}>{ele.money}</View>
                     </View>
                     <View className={style.item_message}>
                        <View className={style.item_message_lebal}>安装时间</View>
-                       <View className={style.item_message_text}>{ele.installTime}</View>
+                       <View className={style.item_message_text}>{filterTime(ele.orderUpdateTime)}</View>
                     </View>
                  </View>
                 <Image src={order_bg} className={style.order_bg} />

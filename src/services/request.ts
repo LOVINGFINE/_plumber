@@ -1,70 +1,77 @@
-import axios from 'taro-axios';
-import API_PATH,{ACCESS_TOKEN} from './env'
-// axios.defaults.baseURL = API_PATH; //接口地址 本地测试
-// axios.defaults.timeout = 20000;
-// axios.defaults.headers.post['Content-Type'] = 'application/json';
-let http = axios.create({
-  baseURL : API_PATH,//接口地址 本地测试
-  timeout :20000,
-  headers:{
-  post:{'Content-Type': 'application/json'}
- }
-})
+import axios from "taro-axios";
+import API_PATH, { ACCESS_TOKEN } from "./env";
+import Taro from '@tarojs/taro'
+const http = axios.create({
+  baseURL: API_PATH, //接口地址 本地测试
+  timeout: 20000
+});
+http.defaults.headers.post["Content-Type"] = "application/json";
+
 http.interceptors.response.use(
-  (response) => {
+  response => {
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
-    switch(response.status){
-      case 401:
-    
-        break;
-      case 403:
- 
-        break;
-      case 500:
-        
-        break;
-      case 503:
-        
-        break;
-      default:
-       
-      break;
+    return response.status === 200
+      ? Promise.resolve(response)
+      : Promise.reject(response);
+  },
+  error => {
+    if (error.response.status) {
+      switch (error.response.status) {
+        case 400:
+          console.log("参数异常");
+          break;
+        // 401: 未授权
+        case 401:
+          Taro.reLaunch({ url: "/pages/first/index" });
+          break;
+        case 403:
+          console.log("没有权限");
+          break;
+        case 404:
+          console.log("页面没找到");
+          break;
+        default:
+          console.log("出错了");
+      }
+      return Promise.reject(error.response);
     }
-    return Promise.resolve(response);
-  },
-  (error) => {
-    // history.push('/404')
-    return Promise.reject(error);
-  },
+  }
 );
 
 http.interceptors.request.use(
-  (config) => { 
-    if(ACCESS_TOKEN!=''){
-      config.headers.common['accessToken'] = ACCESS_TOKEN
+  config => {
+    if (ACCESS_TOKEN) {
+      config.headers.common["accessToken"] = ACCESS_TOKEN;
     }
     return config;
   },
-  (error) => {
+  error => {
     return Promise.reject(error);
-  },
+  }
 );
 
-export const  _get = async (url: string) => {
-  let res = await axios.get(url);
-  return  res.data
+export const _get = async (url: string, params?: any) => {
+  const res = await http.get(url, {
+    params
+  });
+  console.log(res.data);
+  return res.data;
 };
-export const _delete = async(url: string) => {
-  let res = await axios.delete(url);
-  return  res.data
+
+export const _delete = async (url: string) => {
+  let res = await http.delete(url);
+  return res.data;
 };
+
 export const _post = async (url: string, data?: any) => {
-  let res = await axios.post(url, data);
-  return  res.data
+  let res = await http.post(url, data);
+  return res.data;
 };
+
 export const _put = async (url: string, data?: any) => {
-  let res = await axios.put(url, data);
-  return  res.data
+  let res = await http.put(url, data);
+  return res.data;
 };
-export default http
+
+export default http;

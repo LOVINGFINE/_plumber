@@ -1,14 +1,15 @@
 export default {
   pages: [
-    'pages/person-set/index',
+    'pages/tabPage/order/detail',
+    'pages/user-login-code/user_name',
     'pages/first/index',
+    'pages/person-set/index',
+    
     'pages/person-set/phone',
     'pages/person-set/name',
     'pages/product/mapView',
     'pages/tabPage/order/search',
-    'pages/tabPage/order/detail',
     'pages/user-login/index',
-    'pages/user-login-code/user_name',
     'pages/user-login-code/index',
     'pages/product/index',
     'pages/codeInfo/codeSuccess',
@@ -23,7 +24,6 @@ export default {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',
     navigationBarTitleText: '水电工小程序',
-    navigationBarTextStyle: 'black',
-  
+    navigationBarTextStyle: 'black'
   }
 }
