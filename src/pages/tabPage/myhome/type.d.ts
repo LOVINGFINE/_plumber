@@ -4,4 +4,7 @@ export interface Iuser {
       outletsName: string,
       phone: string,
       realName: string
+      solarTime:number
+      cityName:string
+      provinceName:string
 }

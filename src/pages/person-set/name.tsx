@@ -20,7 +20,7 @@ export default () => {
         setPopShow(true);
         setInfoText("修改成功");
         setTimeout(()=>{
-          Taro.navigateBack({ delta: 1 });
+          Taro.redirectTo({ url: '/pages/person-set/index' });
         },1000)
       }
     });

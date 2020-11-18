@@ -3,5 +3,6 @@ export interface Clist {
 	outletsAddress: string,
 	outletsId: number,
 	outletsName: string,
-	reflectTime: number
+	reflectTime: number,
+
 }

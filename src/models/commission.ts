@@ -4,11 +4,9 @@ export const getComTop = ()=>{
    return _post(`/hydropower/commission/refund/total`)
 }
 
-export const getComList = (data:{
-   endTime: number,
-	pageNum: number,
-	pageSize: number,
-	startTime: number
-})=>{
-   return _post(`/hydropower/commission/reflect/list`,data)
+export const getComList = (page:number)=>{
+   return _post(`/hydropower/commission/reflect/list`,{
+      pageNum:page,
+      pageSize:30
+   })
 }

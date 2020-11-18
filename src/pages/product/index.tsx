@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react'
-import Taro from '@tarojs/taro'
+import Taro,{getCurrentInstance} from '@tarojs/taro'
 import { AtIcon,AtToast  } from 'taro-ui'
 import {
 View,
@@ -31,11 +31,14 @@ export default ()=>{
   /**
    * 表单数据
    */
-   const [code,setCode] = useState<string>('292080')
-   const [phone,setPhone] = useState<string>('15000558033')
+   const [code,setCode] = useState<string>('139073')
+   const [phone,setPhone] = useState<string>('')
    const [custom_name,setCostomName] = useState<string>('')
    const [custom_tel,setCostomTel] = useState<string>('')
    const [custom_address,setCustomAddress] = useState<string>('')
+   const [order_data,setUserOrder] = useState<any>({
+
+   })
    useEffect(()=>{
       let n = 0
       pro_list.forEach(ele=>{
@@ -43,11 +46,22 @@ export default ()=>{
       })
       setTotal(n)
    },[pro_list])
+   useEffect(()=>{
+      let d = Taro.getStorageSync('user') || {phone:''}
+      let id = getCurrentInstance().router.params.id || ''
+      if(id!=''){
+         setSteps(1)
+         let order = Taro.getStorageSync('order_data')
+         setUserOrder(order)
+      }
+      setPhone(d.phone)
+      // setCustomAddress(getCurrentInstance().router.params.id || '')
+   },[])
    const findCodeView = ()=>{
-      Taro.scanCode({
-         onlyFromCamera:true,
-      }).then((res:any)=>{
+      Taro.scanCode({}).then((res:any)=>{
           // 扫码成功
+          console.log(res);
+          
           Taro.navigateTo({url:'/pages/codeInfo/codeSuccess'})
       }).catch(()=>{
          // 扫码失败
@@ -68,9 +82,10 @@ export default ()=>{
                   setLoad(false)
                   setInfoBox(message)
                }else {
-                  console.log(data);
-                  
-                  // setSteps(1)
+                  setLoad(false)
+                  setCostomName(data.name)
+                  setCostomTel(data.phone)
+                  setSteps(1)
                }
                
             })
@@ -175,8 +190,9 @@ export default ()=>{
             </View>
             <View className={style.name_ipt_item}>
                <View className={style.name_item_lebal}>业主地址</View>
-               <View  className={style.name_item_text} onClick={()=>handleMapShow()}>{custom_address===''?<View className={style.put_info}><Image className={style.map_icon} src={map_icon} /><View>选择地址</View></View>:custom_address}</View>
-               <AtIcon value='chevron-right'  size='15' color='#A8A8A8' />
+               <Input className={style.name_ipt_text}   placeholder='请输入地址' value={custom_address} onInput={(e)=>setCustomAddress(e.detail.value)} />
+               {/* <View  className={style.name_item_text} onClick={()=>handleMapShow()}>{custom_address===''?<View className={style.put_info}><Image className={style.map_icon} src={map_icon} /><View>选择地址</View></View>:custom_address}</View>
+               <AtIcon value='chevron-right'  size='15' color='#A8A8A8' /> */}
             </View>
             <View className={style.name_ipt_item} style={{border:'none'}}>
                <View className={style.name_item_lebal}>安装产品</View>

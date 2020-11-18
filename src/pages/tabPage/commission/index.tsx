@@ -7,17 +7,14 @@ ScrollView
 import ComList from './components/comList'
 import CheckEmpty from '@/components/empty'
 import style from './index.module.less'
-import {filterTime} from '@/utils/filter'
 import { com_bg,warning} from '@/assets/model'
 import {Clist} from './type'
 import {getComList,getComTop} from '@/models/commission'
-
 /**
  * @interface Cllist
  * 记录字段 类型
  */
 export default ()=>{
-  filterTime(1398250549490)
    const [user_data,setData] = useState<{total:number,visable:number}>({
         total:0,
         visable:0
@@ -27,6 +24,7 @@ export default ()=>{
    const [refresh,setRefresh] = useState<boolean>(false)
    const [more,setMore] = useState<boolean>(false)
    useEffect(()=>{
+    onPageChange(page)
     getComTop().then(res=>{
       let {leftTotal,reflectTotal} = res.data
       setData({
@@ -35,15 +33,19 @@ export default ()=>{
       })
     })
    },[])
-   useEffect(()=>{
-    // getComList
-   },[])
    const onPageChange = (p:number)=>{
        setPage(p)
-       setTimeout(()=>{
-         setRefresh(false)
-         setMore(false)
-       },3000)
+       getComList(p).then(res=>{
+        setMore(false)
+        setRefresh(false)
+         let {code,data} = res
+         if(p===1){
+            setList(data)
+         }else {
+           let l = list.concat(data)
+            setList(l)
+         }
+       })
    }
    return (<View className={style.box}>
         <View className={style.top}>
@@ -78,7 +80,7 @@ export default ()=>{
          }}
          scrollY className={style.main}>
          <CheckEmpty isShow={list.length>0} empty_ele={<Empty />}>
-           <ComList time={'2020年9月'} list={list} />
+           <ComList list={list} />
            </CheckEmpty>
            <View className={style.load_more}>
                {

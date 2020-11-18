@@ -6,36 +6,40 @@ import style from "./index.module.less";
 import PopUp from "@/components/Pop-ups/text";
 import PopInfo from "@/components/Pop-ups/info";
 import checkEmpty from "@/utils/checkEmpty";
-import { postRegister } from "@/models/user";
-
+import { modifyInfo,pickTimeSolar } from "@/models/user";
+import { filterTimeDay,opTimeUnix,filterTimeDayN } from "@/utils/filter";
+import mapData from '@/utils/map'
 export default (props: any) => {
   // 获取本地手机号
   const phone = Taro.getStorageSync("phone");
   const [name, setName] = useState<string>("");
   const [time, setTime] = useState<string>("");
-  const [time_n, setTimeN] = useState<string>("");
+  const [time_n, setTimeN] = useState<number>(0);
   const [address, setAddress] = useState<string>("");
   const [pop_show, setPopShow] = useState<boolean>(false);
   const [warn_text, setWarnText] = useState<string>("");
   const [info_show, setInfoShow] = useState<boolean>(false);
-  //   const [outletsId, setOutletsId] = useState<string>("");
-  //   useEffect(() => {
-  //     setOutletsId(getCurrentInstance().router.params.id || "");
-  //   }, []);
-
+  const [citys,setCity] = useState<any>([])
+  const [c,setC] = useState<number>(0)
+  const [p,setP] = useState<number>(0)
+  const [cityName,setCityName] = useState<string>('')
+  const [provinceName,setProvinceName] = useState<string>('')
   const handleSend = () => {
     if (
-      checkEmpty([name, time, time_n, address]) ||
-      checkEmpty([name, time, time_n, address]) === 0
+      checkEmpty([name, time, time_n]) ||
+      checkEmpty([name, time, time_n]) === 0
     ) {
-      sendInfo(checkEmpty([name, time, time_n, address]));
+      sendInfo(checkEmpty([name, time, time_n]));
     } else {
       // 注册
-      postRegister({ name, phone }).then(e => {
-        //   if (e.code === 200) {
+      modifyInfo({ name, solarTime:opTimeUnix(time),cityName,provinceName }).then(e => {
+          if (e.code === 200) {
         // 非空验证成功
-        Taro.reLaunch({ url: "/pages/first/index?isFrist=true" });
-        //   }
+            Taro.reLaunch({ url: "/pages/first/index?isFrist=true" });
+          }else {
+            setWarnText(e.message)
+            setPopShow(true)
+          }
       });
     }
   };
@@ -59,14 +63,28 @@ export default (props: any) => {
     }
     setInfoShow(true);
   };
+  const changeTime = (t:string)=>{
+    setTime(t)
+    pickTimeSolar(opTimeUnix(t)).then(res=>{
+      let {data} = res
+      setTimeN(data)
+    })
+  }
+  const changeAddress = (e)=>{
+    setProvinceName(mapData[e.value[0]].value)
+    setCityName(citys[e.value[0]].value) 
+  }
+  const onColumnChange = (e)=>{
+     if(e.column===0){
+      setCity(mapData[e.value].children)
+      setP(e.value)
+     }else {
+       setC(e.value)
+     }
+  }
   return (
     <View className={style.username_box}>
       <PopInfo title={warn_text} show={info_show} setShow={setInfoShow} />
-      <PopUp
-        show={pop_show}
-        setShow={setPopShow}
-        title={"邀请码不存在,请重新输入"}
-      />
       <View className={style.name_ipt_item}>
         <View className={style.name_item_lebal}>姓名</View>
         <Input
@@ -81,7 +99,7 @@ export default (props: any) => {
           mode="date"
           className={style.name_item_text}
           value={time}
-          onChange={e => setTime(e.detail.value)}
+          onChange={e => changeTime(e.detail.value)}
         >
           <View>{time === "" ? "请选择日期" : time}</View>
         </Picker>
@@ -90,17 +108,34 @@ export default (props: any) => {
         <View className={style.name_item_lebal}>阴历生日</View>
         <Input
           className={style.name_item_text}
-          value={time_n}
-          onInput={e => setTimeN(e.detail.value)}
+          value={filterTimeDayN(time_n)}
+          disabled
         />
       </View>
       <View className={style.name_ipt_item}>
         <View className={style.name_item_lebal}>籍贯</View>
-        <Input
-          className={style.name_item_text}
-          value={address}
-          onInput={e => setAddress(e.detail.value)}
-        />
+        <Picker
+            mode="multiSelector"
+            range={[mapData,citys]}
+            rangeKey={'label'}
+            className={style.name_item_text}
+            value={[p,c]}
+            onChange={e => changeAddress(e.detail)}
+            onColumnChange={(e)=>onColumnChange(e.detail)}
+           >
+            <View
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flex: "auto",
+              justifyContent: "flex-end"
+            }}
+           >{
+            (provinceName+cityName)===''?(<View className={style.name_item_text}>请选择籍贯</View>):(<View className={style.name_item_text}>{provinceName+ ' ' + cityName}</View>)
+           }
+            
+           </View>
+          </Picker>
       </View>
       <View className={style.bottom_btn_box}>
         <Button className={style.bottom_btn} onClick={handleSend}>

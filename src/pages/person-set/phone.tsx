@@ -16,7 +16,7 @@ export default () => {
     let d = Taro.getStorageSync("user") || { phone: "" };
     setOld(d.phone);
   }, []);
-  const handleSend = useCallback(() => {
+  const handleSend = ()=>{
     modifyPhoneNumber({
       code: code,
       newPhone: newVal,
@@ -25,18 +25,21 @@ export default () => {
       if (e.code === 200) {
         // 验证规则(手机号、验证码)
         console.log("修改手机号成功");
-        Taro.navigateBack({ delta: 1 });
+        Taro.redirectTo({ url: '/pages/person-set/index' });
+      }else {
+        setInfoText(e.message)
+        setPopShow(true)
       }
     });
-  }, [code, old, newVal]);
+  }
 
-  const handleCodeSend = useCallback(() => {
+  const handleCodeSend = ()=>{
     getVerificationCode(old).then(e => {
       if (e.code === 200) {
         console.log("获取验证码成功");
       }
     });
-  }, [old]);
+  }
 
   return (
     <View className={style.username_box}>

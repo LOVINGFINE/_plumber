@@ -23,6 +23,7 @@ http.interceptors.response.use(
           break;
         // 401: 未授权
         case 401:
+          Taro.setStorageSync("token", '');
           Taro.reLaunch({ url: "/pages/first/index" });
           break;
         case 403:
@@ -55,7 +56,6 @@ export const _get = async (url: string, params?: any) => {
   const res = await http.get(url, {
     params
   });
-  console.log(res.data);
   return res.data;
 };
 
@@ -73,5 +73,4 @@ export const _put = async (url: string, data?: any) => {
   let res = await http.put(url, data);
   return res.data;
 };
-
 export default http;

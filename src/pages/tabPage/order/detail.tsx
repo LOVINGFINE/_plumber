@@ -39,7 +39,7 @@ export default ()=>{
       setTotal(n)
    },[])
   useEffect(()=>{
-   getCurrentInstance().router.params.id || ""
+   getData(getCurrentInstance().router.params.id || "")
   },[])
   const getData = (id:string)=>{
    getOrderDetail(id).then(res=>{

@@ -16,16 +16,22 @@ export default () => {
     outletsId: 0,
     outletsName: "",
     phone: "",
-    realName: ""
+    realName: "",
+    solarTime:0,
+    cityName:'',
+    provinceName:''
   });
     useEffect(() => {
-      setToken(Taro.getStorageSync('token') || '')
-      getUserMessage();
+      let t = Taro.getStorageSync('token') || ''
+      setToken(t)
+      if(t!=''){
+        getUserMessage();
+      }
     }, []);
   const userLogin = () => {
     Taro.login().then(res => {
-      Taro.setStorageSync("phone", "15000558033");
-      check("15000558033");
+      Taro.setStorageSync("phone", "18154175562");
+      check("18154175562");
     });
   };
   const check = (phone: string) => {
@@ -53,7 +59,7 @@ export default () => {
     <View className={style.box}>
       <View className={style.message_box}>
         <Image
-          src={token != ""&&user.image!=='' ? user.image : user_icon}
+          src={token != "" ? user.image : user_icon}
           className={style.message_user_icon}
         />
         <View className={style.message_title_box}>
@@ -77,10 +83,19 @@ export default () => {
       </View>
       {!token && (
         <View className={style.btn_box}>
-          <Button
+          {/* <Button
             className={style.btn}
             openType="getPhoneNumber"
             onGetPhoneNumber={userLogin}
+          >
+            立即登录
+          </Button> */}
+          <Button
+            className={style.btn}
+            onClick={()=>{
+              Taro.setStorageSync("phone", "18154175562");
+              check("18154175562");
+            }}
           >
             立即登录
           </Button>

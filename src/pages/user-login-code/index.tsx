@@ -11,11 +11,11 @@ import style from './index.module.less'
 import PopUp from '@/components/Pop-ups/text'
 import {title_img} from '@/assets/model'
 import {
-      checkRegister,// 检查是否注册
+      postRegister,// 检查是否注册
       postCodeMessage, // 获取登录信息
    } from '@/models/user'
 export default ()=>{
-      const [code,setCode] = useState<string>('')
+      const [code,setCode] = useState<string>('714155')
       const [pop_show,setPopShow] = useState<boolean>(false)
       const [pop_text,setText] = useState<string>('')
       const [phone,setPhone] = useState<string>('')
@@ -33,17 +33,24 @@ export default ()=>{
    }
    const handleSend = ()=>{
          // 验证邀请码
-         check(1111)
-      //    postCodeMessage(code).then(res=>{
-      //          if(res.code==200){
-      //             check(res.data.id)
-      //          }else {
-      //             setWarn('邀请码不存再，请重新输入')
-      //          }
-      //    })
+         postCodeMessage(code).then(res=>{
+               if(res.code==200){
+                  postRegister({phone,id:res.data.id}).then(res=>{
+                        let {code,data,message} = res
+                        if(code===200&&data.register){
+                              check(data.token)  
+                        }else {
+                              setWarn(message)   
+                        }
+                  })
+               }else {
+                  setWarn('邀请码不存再，请重新输入')
+               }
+         })
    }
-   const check = (id:number)=>{
-      Taro.navigateTo({url:`/pages/user-login-code/user_name?id=${id}`})
+   const check = (t:string)=>{
+      Taro.setStorageSync('token',t)
+      Taro.navigateTo({url:`/pages/user-login-code/user_name`})
      } 
      const setWarn = (text:string)=>{
            setText(text)
