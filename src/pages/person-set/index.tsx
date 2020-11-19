@@ -79,6 +79,8 @@ export default () => {
         setTime(filterTimeDay(data.solarTime))
         Taro.setStorageSync("user", data);
         setUser(data);
+      }else {
+
       }
     });
   };
@@ -125,8 +127,6 @@ export default () => {
   }
   const onColumnChange = (e)=>{
      if(e.column===0){
-       console.log(mapData[e.value]);
-       
       setCity(mapData[e.value].children)
       setP(e.value)
      }else {

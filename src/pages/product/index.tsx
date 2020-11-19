@@ -37,6 +37,7 @@ export default ()=>{
    const [order_data,setUserOrder] = useState<Tr>({
       address: '',
       codeId: 0,
+      phone:'',
       goodsList:[],
       id: 0,
       money: 0 
@@ -118,6 +119,7 @@ export default ()=>{
                   u.name = data.name
                   d.id = data.id
                   d.codeId = data.codeId
+                  d.phone = phone
                   setUserOrder(d)
                   setUserData(u)
                   Taro.setStorageSync('order',d)

@@ -10,6 +10,7 @@ import style from './index.module.less'
 import { com_bg,warning} from '@/assets/model'
 import {Clist} from './type'
 import {getComList,getComTop} from '@/models/commission'
+import InfoText from '@/components/Pop-ups/text'
 /**
  * @interface Cllist
  * 记录字段 类型
@@ -19,6 +20,8 @@ export default ()=>{
         total:0,
         visable:0
    })
+   const [info_show,setInfo] = useState<boolean>(false)
+   const [info_text,setInfoText] = useState<string>('')
    const [list,setList] = useState<Array<Clist>>([])
    const [page,setPage] = useState<number>(1)
    const [refresh,setRefresh] = useState<boolean>(false)
@@ -32,8 +35,8 @@ export default ()=>{
           reflectTotal
         } = res.data
         setData({
-          total: leftTotal,
-          visable: reflectTotal
+          total: reflectTotal,
+          visable: leftTotal
         })
       }
     })
@@ -43,18 +46,25 @@ export default ()=>{
        getComList(p).then(res=>{
         setMore(false)
         setRefresh(false)
-         let {code,data} = res
+         let {code,data,message} = res
          if(code===200){
           if(p===1){
             setList(data)
+           }else {
+             let l = list.concat(data)
+              setList(l)
+           }
          }else {
-           let l = list.concat(data)
-            setList(l)
-         }
+          setInfoBox(message)
          }
        })
    }
+   const setInfoBox = (text:string)=>{
+    setInfoText(text)
+    setInfo(true)
+}
    return (<View className={style.box}>
+     <InfoText title={info_text} show={info_show} setShow={setInfo} />
         <View className={style.top}>
            <View className={style.top_box}>
              <View className={style.top_message}>
