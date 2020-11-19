@@ -47,6 +47,7 @@ export default () => {
                 let u = {...user}
                 u.image = tempFilePaths[0]
                 setUser(u)
+                getUserMessage()
               }
               });
             }
@@ -93,6 +94,7 @@ export default () => {
       let {code} = res
       if(code===200){
         setPopShow(true)
+        getUserMessage()
       }
     })
     pickTimeSolar(opTimeUnix(t)).then(res=>{
@@ -103,7 +105,7 @@ export default () => {
   const changeAddress = (e)=>{
     let d= {...user}
     d.provinceName = mapData[e.value[0]].value
-    d.cityName = citys[e.value[0]].value
+    d.cityName = citys[e.value[1]].value
     
     modifyInfo({
       solarTime:d.solarTime,
@@ -111,15 +113,20 @@ export default () => {
       provinceName:d.provinceName,
       cityName:d.cityName
     }).then(res=>{
-      let {code} = res
+      let {code,message} = res
       if(code===200){
         setPopShow(true)
         setUser(d)
+        getUserMessage()
+      }else {
+        
       }
     })
   }
   const onColumnChange = (e)=>{
      if(e.column===0){
+       console.log(mapData[e.value]);
+       
       setCity(mapData[e.value].children)
       setP(e.value)
      }else {
@@ -224,7 +231,7 @@ export default () => {
             }}
            >
            
-            <View className={style.name_item_text}>{user.provinceName+ ' ' + user.cityName}</View>
+            <View className={style.name_item_text}>{user.provinceName===user.cityName?user.provinceName:user.provinceName+ ' ' + user.cityName}</View>
             <AtIcon value="chevron-right" size="15" color="#A8A8A8" />
            </View>
           </Picker>

@@ -75,7 +75,7 @@ export default ()=>{
                                <View className={style.pro_list_item_title}>{ele.name}</View>
                                <View className={style.pro_list_item_dec}>
                                    <View style={{marginRight:'6px'}}>ID:{ele.code}</View>
-                               <View>￥ {ele.pr} x {ele.ct}</View>
+                               <View>￥ {ele.pr/100} x {ele.ct}</View>
                                 </View>
                            </View>
                        }))
@@ -84,7 +84,7 @@ export default ()=>{
             </View>
             <View className={style.name_ipt_item} style={{border:'none'}}>
                <View className={style.name_item_lebal}>商品总金额</View>
-               <View  className={style.name_item_text} style={{paddingRight:'30px'}}>￥ {order_data.money}</View>
+               <View  className={style.name_item_text} style={{paddingRight:'30px'}}>￥ {order_data.money/100}</View>
             </View>
          </View>
          <View style={{padding:'20px 15px',boxSizing:'border-box',backgroundColor:'#fff',marginBottom:'10px'}}>

@@ -60,11 +60,11 @@ export default ()=>{
              <View className={style.top_message}>
                <View className={style.message_item}>
                   <View className={style.message_text}>提现总金额</View>
-                  <View className={style.message_number}>￥ {user_data.total}</View>   
+                  <View className={style.message_number}>￥ {user_data.total/100}</View>   
                </View>
                <View className={style.message_item}>
                   <View className={style.message_text}>可提现余额</View>
-                  <View className={style.message_number}>￥ {user_data.visable}</View>   
+                  <View className={style.message_number}>￥ {user_data.visable/100}</View>   
                </View>   
              </View>
              <Image className={style.top_bgImg} src={com_bg} />
@@ -82,8 +82,10 @@ export default ()=>{
            onPageChange(1)
          }}
          onScrollToLower={()=>{
-           setMore(true)
-           onPageChange(page+1)
+          if(list.length>0){
+            setMore(true);
+          onPageChange(page + 1);
+          }
          }}
          scrollY className={style.main}>
          <CheckEmpty isShow={list.length>0} empty_ele={<Empty />}>

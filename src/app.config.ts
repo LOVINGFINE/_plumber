@@ -1,5 +1,6 @@
 export default {
   pages: [
+    'pages/product/mapView',
     'pages/first/index',
     'pages/user-login-code/user_name',
    
@@ -8,7 +9,7 @@ export default {
     'pages/tabPage/order/detail',
     'pages/person-set/phone',
     'pages/person-set/name',
-    'pages/product/mapView',
+    
     'pages/tabPage/order/search',
     'pages/user-login/index',
     'pages/user-login-code/index',

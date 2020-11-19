@@ -43,7 +43,7 @@ export default () => {
                   Taro.setStorageSync('order',or_d)
                   
                }else {
-                  Taro.redirectTo({url:'/pages/codeInfo/codeError'})
+                  Taro.redirectTo({url:'/pages/codeInfo/codeError?errorText=' + message})
                }
           })
    }).catch(()=>{

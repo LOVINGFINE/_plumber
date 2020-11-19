@@ -35,12 +35,12 @@ export default ({list}:{list:Array<Ilist>})=>{
                        <View className={style.item_message_text}>{ele.goodsList.length>0?`${ele.goodsList[0].name} ID${ele.goodsList[0].code}...等${ele.goodsList.length}件商品`:'暂无信息'}</View>
                     </View>
                     <View className={style.item_message}>
-                       <View className={style.item_message_lebal}>商品贡献分</View>
-                       <View className={style.item_message_text}>{ele.money}</View>
+                       <View className={style.item_message_lebal}>商品价格</View>
+                       <View className={style.item_message_text}>{ele.money/100}</View>
                     </View>
                     <View className={style.item_message}>
                        <View className={style.item_message_lebal}>安装时间</View>
-                       <View className={style.item_message_text}>{filterTime(ele.orderUpdateTime)}</View>
+                       <View className={style.item_message_text}>{ele.orderUpdateTime?filterTime(ele.orderUpdateTime):'暂未安装'}</View>
                     </View>
                  </View>
                 <Image src={order_bg} className={style.order_bg} />

@@ -62,7 +62,7 @@ export default ({
                     return <View key={ele.reflectTime} className={style.com_item}>
                         <View className={style.com_item_time}>
                            <Text>{filterTime(ele.reflectTime)}</Text>
-                           <Text style={{fontSize:'20px'}}>{ele.money}</Text>
+                           <Text style={{fontSize:'20px'}}>{ele.money/100}</Text>
                         </View>
                         <View className={style.com_item_text}>{ele.outletsAddress}</View>
                         <View className={style.com_item_text}>老板姓名:  {ele.outletsName}</View>

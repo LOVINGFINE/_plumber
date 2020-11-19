@@ -1,5 +1,5 @@
 import React, { Component,useState,useEffect } from 'react'
-import Taro from '@tarojs/taro'
+import Taro,{getCurrentInstance} from '@tarojs/taro'
 import { AtIcon } from 'taro-ui'
 import {
 View,
@@ -11,19 +11,41 @@ ScrollView
 } from '@tarojs/components'
 import style from './style.module.less'
 import PopUp from '@/components/Pop-ups/text'
-import {getSearchMapList} from '@/models/map'
+import {getSearchMapList,KEY_MAP} from '@/models/map'
 import {search_icon} from '@/assets/model'
 export default ()=>{
     const [search_text,setSearchText] = useState<string>('')
-    const [lat,setLat] = useState<number>(40)
-    const [lng,setLng] = useState<number>(31.23)
-    const [selest_add,setSelect] = useState<string>('')
+    const [lat,setLat] = useState<number>(0)
+    const [lng,setLng] = useState<number>(0)
+    const [select_add,setSelect] = useState<number>(-1)
     const [map_list,setMpaList] = useState<Array<any>>([])
     const [url,setUrl] = useState<string>('')
+    const [id,setId] = useState<string>('')
+    const [city,setCity] = useState<string>('')
    useEffect(()=>{
+       setId(getCurrentInstance().router.params.id || '')
+       let user = Taro.getStorageSync('user') || {cityName:'上海市'}
+       if(user.cityName!=''){
+            setCity(user.cityName)
+       }else {
+        setCity('上海市')
+       }
+       Taro.getLocation({
+
+       }).then(res=>{
+           console.log(res);
+           let {latitude,longitude} = res
+           setLat(latitude)
+           setLng(longitude)
+       }).catch(res=>{
+           Taro.navigateBack({delta:1})
+       })
    },[])
     const handleSearch = ()=>{
-        getSearchMapList(search_text).then(res=>{
+        getSearchMapList({
+            keyword:search_text,
+            region:city
+        }).then(res=>{
             let {code,data} = res
             if(code===200){
                 setMpaList(res.data)
@@ -31,10 +53,17 @@ export default ()=>{
         })
     }  
     const handleBack = ()=>{
-        Taro.redirectTo({url:`/pages/product/index?url=${url}`})
+        if(url!=''){
+            let order = Taro.getStorageSync('order')
+            order.address = url
+            Taro.setStorageSync('order',order)
+        }
+        Taro.redirectTo({url:`/pages/product/index?id=${id}`})
     }
    return (<View className={style.map_box} >
-          <Map style={{width:'100%',height:'100%'}} onClick={()=>{}} latitude={lat} longitude={lng} />
+          {
+              lat!=0||lng!=0?(<Map style={{width:'100%',height:'100%'}} onClick={()=>{}} latitude={lat} longitude={lng} />):(<View/>)
+          }
           <View className={style.map_serch_box}>
                  <View className={style.map_search_top}>
                      <View className={style.map_cancel}>取消</View>
@@ -54,21 +83,26 @@ export default ()=>{
                  <ScrollView scrollY style={{width:'100%',height:'196px',marginTop:'15px'}}>
                  <View className={style.map_list}>
                  {
-                     map_list.map((ele:any)=>{
+                     map_list.map((ele:any,i:number)=>{
                          return <View className={style.map_item} onClick={()=>{
-                            setSelect(ele.id)
-                            setUrl(ele.name)
-                         }} key={ele.id}>
+                            if(select_add===-1||i!=select_add){
+                                setSelect(i)
+                                setUrl(ele)
+                            }else {
+                                setSelect(-1)
+                                setUrl('')
+                            }
+                         }} key={ele}>
                              <View className={style.map_item_con}>
-                                <View className={style.map_item_title}>{ele.name}</View>
+                                <View className={style.map_item_title}>{ele}</View>
                                 <View className={style.map_item_dec}>
-                                    <View>{ele.destance}m</View>
+                                    {/* <View>{ele.destance}m</View>
                                     <View className={style.map_item_line} />
-                                    <View>{ele.dec}</View>
+                                    <View>{ele.dec}</View> */}
                                 </View>
                              </View>
                             {
-                                ele.id===selest_add? <AtIcon value='check' size={20} color='#003BA5' />:""
+                                i===select_add? <AtIcon value='check' size={20} color='#003BA5' />:""
                             }
                          </View>
                      })

@@ -76,7 +76,7 @@ export default ()=>{
                   let l = [...or_d.goodsList]
                   l.push({
                      bcn: data.bigCategory,
-                     code: data.id,
+                     code: data.goodsCode,
                      ct: 1,
                      name: data.goodsName,
                      pr: data.price,
@@ -235,9 +235,9 @@ export default ()=>{
       setModalEle(e)
       setModal(true)
    }
-   const handleMapShow = ()=>{
-      Taro.navigateTo({url:'/pages/product/mapView'})
-   }
+   // const handleMapShow = ()=>{
+   //    Taro.redirectTo({url:'/pages/product/mapView?id='+order_data.id})
+   // }
    const setInfoBox = (text:string)=>{
        setInfoText(text)
        setInfo(true)
@@ -281,7 +281,7 @@ export default ()=>{
             <View className={style.name_ipt_item}>
                <View className={style.name_item_lebal}>业主地址</View>
                <Input className={style.name_ipt_text}   placeholder='请输入地址' value={order_data.address} onInput={(e)=>setCustomAddress(e.detail.value)} />
-               {/* <View  className={style.name_item_text} onClick={()=>handleMapShow()}>{custom_address===''?<View className={style.put_info}><Image className={style.map_icon} src={map_icon} /><View>选择地址</View></View>:custom_address}</View>
+               {/* <View  className={style.name_item_text} onClick={()=>handleMapShow()}>{order_data.address===''?<View className={style.put_info}><Image className={style.map_icon} src={map_icon} /><View>选择地址</View></View>:order_data.address}</View>
                <AtIcon value='chevron-right'  size='15' color='#A8A8A8' /> */}
             </View>
             <View className={style.name_ipt_item} style={{border:'none'}}>
@@ -304,7 +304,7 @@ export default ()=>{
                                  </View>
                                <View className={style.pro_item_bottom}>
                                  <View style={{marginRight:'12px'}}>ID: {ele.code}</View>
-                                  <View>商品价格 ￥{ele.pr}</View>
+                                  <View>商品价格 ￥{ele.pr/100}</View>
                                </View>
                         </View>
                      })
@@ -319,7 +319,7 @@ export default ()=>{
                </>)
          }
          <CheckEmpty isShow={order_data.money>0&&steps!=0} empty_ele={<View />} >
-            <View className={style.num_show_text}>商品总金额: ￥{order_data.money}</View>
+            <View className={style.num_show_text}>商品总金额: ￥{order_data.money/100}</View>
          </CheckEmpty>
          <View className={style.bottom_btn_box} >
             <Button className={style.bottom_btn} style={isPost||steps===1?{}:{

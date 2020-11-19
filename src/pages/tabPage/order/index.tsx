@@ -65,8 +65,10 @@ export default () => {
           onPageChange(1);
         }}
         onScrollToLower={() => {
-          setMore(true);
+          if(list.length>0){
+            setMore(true);
           onPageChange(page + 1);
+          }
         }}
         scrollY
         className={style.main}
