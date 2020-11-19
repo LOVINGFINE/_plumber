@@ -59,10 +59,16 @@ export default () => {
   const logoutUser = () => {
     Taro.setStorageSync("token", "");
     Taro.setStorageSync("user", {
-      name: "",
-      phone: ""
+      image: "",
+      outletsId: 0,
+      outletsName: "",
+      phone: "",
+      realName: "",
+      solarTime:0,
+      cityName:'',
+      provinceName:''
     });
-    Taro.reLaunch({ url: "/pages/first/index" });
+    Taro.reLaunch({ url: "/pages/first/index?login=true" });
   };
   const getUserMessage = () => {
     getUserInfo().then(res => {
@@ -191,12 +197,12 @@ export default () => {
             value={time}
             onChange={e => changeTime(e.detail.value)}
           >
-            <View>{!user.solarTime&&time === "" ? "请选择日期" : time}</View>
+            <View>{user.solarTime&&time != "" ? time:"请选择日期"}</View>
           </Picker>
         </View>
         <View className={style.name_ipt_item}>
           <View className={style.name_item_lebal}>阴历生日</View>
-          <Input className={style.name_item_text} disabled value={filterTimeDayN(time_n)} />
+          <Input className={style.name_item_text} disabled value={user.solarTime?filterTimeDayN(time_n):'暂无'} />
         </View>
         <View className={style.name_ipt_item} style={{ border: "none" }}>
           <View className={style.name_item_lebal}>籍贯</View>

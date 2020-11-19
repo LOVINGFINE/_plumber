@@ -1,6 +1,6 @@
 import { _get, _post, _put } from "../services/request";
 import Taro from '@tarojs/taro'
-import API_PATH, { ACCESS_TOKEN } from "../services/env";
+import API_PATH from "../services/env";
 export const checkRegister = (data: { phone: string }) => {
   return _post("/hydropower/login/phone", data);
 };
@@ -75,6 +75,7 @@ export const putPhoneWith = (data:{
 }
 export const postFileAvator = async (path:string)=>{
   // 上传头像
+  const ACCESS_TOKEN = Taro.getStorageSync('token') || ''
   let {data} = await Taro.uploadFile({
     url: API_PATH + "/hydropower/login/upload",
     filePath: path, 

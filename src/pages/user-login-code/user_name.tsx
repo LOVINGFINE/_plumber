@@ -66,8 +66,10 @@ export default (props: any) => {
   const changeTime = (t:string)=>{
     setTime(t)
     pickTimeSolar(opTimeUnix(t)).then(res=>{
-      let {data} = res
-      setTimeN(data)
+      if(res.code===200){
+        let {data} = res
+        setTimeN(data)
+      }
     })
   }
   const changeAddress = (e)=>{

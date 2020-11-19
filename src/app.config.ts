@@ -1,8 +1,9 @@
 export default {
   pages: [
     'pages/first/index',
-    'pages/product/index',
     'pages/user-login-code/user_name',
+   
+    'pages/product/index',
     'pages/person-set/index',
     'pages/tabPage/order/detail',
     'pages/person-set/phone',

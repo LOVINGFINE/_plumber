@@ -1,5 +1,5 @@
 import axios from "taro-axios";
-import API_PATH, { ACCESS_TOKEN } from "./env";
+import API_PATH from "./env";
 import Taro from '@tarojs/taro'
 const http = axios.create({
   baseURL: API_PATH, //接口地址 本地测试
@@ -41,7 +41,9 @@ http.interceptors.response.use(
 );
 
 http.interceptors.request.use(
+  
   config => {
+    const ACCESS_TOKEN = Taro.getStorageSync('token') || ''
     if (ACCESS_TOKEN) {
       config.headers.common["accessToken"] = ACCESS_TOKEN;
     }

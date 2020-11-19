@@ -48,9 +48,15 @@ export default ()=>{
                }
          })
    }
-   const check = (t:string)=>{
-      Taro.setStorageSync('token',t)
-      Taro.navigateTo({url:`/pages/user-login-code/user_name`})
+   const check = (t:string)=>{  
+      Taro.setStorage({
+            key:'token',
+            data:t,
+            success:()=>{
+               Taro.redirectTo({url:`/pages/user-login-code/user_name`})
+            }
+      })
+      
      } 
      const setWarn = (text:string)=>{
            setText(text)

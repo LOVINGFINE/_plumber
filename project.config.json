@@ -2,7 +2,7 @@
 	"miniprogramRoot": "dist/",
 	"projectname": "_plumber",
 	"description": "水电安装小程序",
-	"appid": "wx517adc58711b0a60",
+	"appid": "wxcd1ea158d76fae87",
 	"setting": {
 		"urlCheck": false,
 		"es6": false,
