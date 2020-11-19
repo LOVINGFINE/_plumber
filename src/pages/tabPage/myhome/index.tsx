@@ -7,7 +7,8 @@ import { Iuser } from "./type";
 import API_PATH from "../../../services/env";
 import {
   checkRegister, // 检查是否注册
-  getUserInfo // 获取登录信息
+  getUserInfo, // 获取登录信息
+  putPhoneWith,// 获取手机号
 } from "@/models/user";
 export default () => {
   const [token, setToken] = useState<string>("");
@@ -28,19 +29,30 @@ export default () => {
         getUserMessage();
       }
     }, []);
-  const userLogin = () => {
+  const userLogin = (e:any) => {
     Taro.login().then(res => {
-      Taro.setStorageSync("phone", "18154175562");
-      check("18154175562");
+      putPhoneWith({
+        iv:e.detail.iv,
+        encryptData:e.currentTarget.encryptedData,
+        code:res.code
+      }).then(ele=>{
+         let {code,data} = ele
+          if(code===200){
+            Taro.setStorageSync("phone", data.phoneNumber);
+          check(data.phoneNumber);
+          }else {
+
+          }
+      })
+      
     });
   };
   const check = (phone: string) => {
     checkRegister({ phone }).then(res => {
       const { register, token } = res.data;
       if (register) {
-        setToken(token);
         Taro.setStorageSync("token", token);
-        getUserMessage();
+        Taro.reLaunch({url:'/pages/first/index?login=true'})
       } else {
         Taro.navigateTo({ url: "/pages/user-login-code/index" });
       }
@@ -95,8 +107,8 @@ export default () => {
             onClick={()=>{
               Taro.setStorageSync("phone", "18154175562");
               check("18154175562");
-            }}
-          >
+             }}
+            >
             立即登录
           </Button>
         </View>

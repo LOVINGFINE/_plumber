@@ -18,6 +18,9 @@ export default ()=>{
         if(getCurrentInstance().router.params.isFrist){
           setShow(true)
         }
+        if(getCurrentInstance().router.params.login){
+          setCurrent(2)
+        }
       },[])
    return (<View className={style.box} >
     <PopText title={'注册成功'} show={text_show} setShow={setShow} />

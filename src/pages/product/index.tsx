@@ -11,69 +11,96 @@ ScrollView,
 import PopInfo from '@/components/Pop-ups/info'
 import PopModal from '@/components/Pop-ups/modal'
 import style from './style.module.less'
-import {map_icon} from '@/assets/model'
+import {map_icon, order, user} from '@/assets/model'
 import CheckEmpty from '@/components/empty'
-import {postCodeUser} from '@/models/order'
+import {postCodeUser,postOrderCreate,getGoodsWith} from '@/models/order'
 import {TPro} from '../tabPage/order/type'
+import {Tr} from './type'
 export default ()=>{
    
    const [info_show,setInfo] = useState<boolean>(false)
    const [info_text,setInfoText] = useState<string>('')
    const [modal_show,setModal] = useState<boolean>(false)
    const [isPost,setIsPost] = useState<boolean>(false)
-   const [steps,setSteps] =  useState<number>(1)
+   const [steps,setSteps] =  useState<number>(0)
    const [modal_type,setModalEle] = useState<any>('tel')
    const [loading,setLoad] = useState<boolean>(false)
    // 
-   const [pro_list,setProList] = useState<Array<TPro>>([])
-   const [delete_id,setDeleteId] = useState<string>('')
-   const [total_num,setTotal] = useState<number>(0)
+   const [delete_id,setDeleteId] = useState<number>(0)
   /**
    * 表单数据
    */
-   const [code,setCode] = useState<string>('139073')
+   const [code,setCode] = useState<string>('')
    const [phone,setPhone] = useState<string>('')
    const [custom_name,setCostomName] = useState<string>('')
    const [custom_tel,setCostomTel] = useState<string>('')
-   const [custom_address,setCustomAddress] = useState<string>('')
-   const [order_data,setUserOrder] = useState<any>({
-
+   const [order_data,setUserOrder] = useState<Tr>({
+      address: '',
+      codeId: 0,
+      goodsList:[],
+      id: 0,
+      money: 0 
+   })
+   const [user_data,setUserData] = useState<any>({
+      name: '',
+      phone: '',
    })
    useEffect(()=>{
-      let n = 0
-      pro_list.forEach(ele=>{
-         n+=ele.pr
-      })
-      setTotal(n)
-   },[pro_list])
-   useEffect(()=>{
       let d = Taro.getStorageSync('user') || {phone:''}
+      setPhone(d.phone)
+   },[])
+   useEffect(()=>{
+      let u  = Taro.getStorageSync('costom')
       let id = getCurrentInstance().router.params.id || ''
       if(id!=''){
          setSteps(1)
-         let order = Taro.getStorageSync('order_data')
+         let order = Taro.getStorageSync('order')
          setUserOrder(order)
+         setUserData(u)
+         setCostomName(u.name)
+         setCostomTel(u.phone)
       }
-      setPhone(d.phone)
       // setCustomAddress(getCurrentInstance().router.params.id || '')
    },[])
    const findCodeView = ()=>{
       Taro.scanCode({}).then((res:any)=>{
           // 扫码成功
-          console.log(res);
+         let {result} = res
+          getGoodsWith(result).then(e=>{
+               let {code,data,message} = e
+               if(code===200){
+                  Taro.redirectTo({url:'/pages/codeInfo/codeSuccess'})
+                  let or_d = {
+                     ...order_data
+                  }
+                  let l = [...or_d.goodsList]
+                  l.push({
+                     bcn: data.bigCategory,
+                     code: data.id,
+                     ct: 1,
+                     name: data.goodsName,
+                     pr: data.price,
+                     scn: data.smallCategory
+                  })
+                  or_d.goodsList = l
+                  or_d.money = conCulte(l)
+                  setUserOrder(or_d)
+                  Taro.setStorageSync('order',or_d)
+                  
+               }else {
+                  Taro.redirectTo({url:'/pages/codeInfo/codeError'})
+               }
+          })
           
-          Taro.navigateTo({url:'/pages/codeInfo/codeSuccess'})
       }).catch(()=>{
          // 扫码失败
-         Taro.navigateTo({url:'/pages/codeInfo/codeError'})
+         
       })
    }
    const postDataSteps = ()=>{
-     
       // 提交数据
-      if(isPost){
+      if(isPost||steps===1){
          // 可以操作
-         //  setSteps(1)
          setLoad(true)
          if(steps===0){
             postCodeUser({code,phone}).then(res=>{
@@ -85,34 +112,80 @@ export default ()=>{
                   setLoad(false)
                   setCostomName(data.name)
                   setCostomTel(data.phone)
+                  let d = {...order_data}
+                  let u = {...user_data}
+                  u.phone = data.phone
+                  u.name = data.name
+                  d.id = data.id
+                  d.codeId = data.codeId
+                  setUserOrder(d)
+                  setUserData(u)
+                  Taro.setStorageSync('order',d)
+                  Taro.setStorageSync('costom',u)
                   setSteps(1)
                }
-               
-            })
-            
+            }) 
          }else {
-
+            // 提交安装单
+            if(order_data.address!=''){
+               commitOrder()
+            }else {
+               setLoad(false)
+               setInfoBox('请填写地址')
+            }
+         }
+      }
+   }
+   const commitOrder = ()=>{
+      if(order_data.goodsList.length>0){
+         if(order_data.money>0){
+            postOrderCreate(order_data).then(res=>{
+               setLoad(false)
+               let {code,message} = res
+               if(code===200){
+                  Taro.reLaunch({ url: "/pages/first/index" });
+               }else {
+                  setInfoBox(message)
+               }
+            })
+         }else {
+            setLoad(false)
+            setInfoBox('安装产品已被其他水电工使用，请重新扫码添加')
          }
       }else {
-         return 
+         setLoad(false)
+         setInfoBox('请添加产品')
       }
+   }
+   const conCulte = (e:Array<TPro>)=>{
+      let n = 0
+      e.forEach(ele=>{
+         n+=ele.pr
+      })
+      return n
    }
    const deletePro =()=>{
       // 删除商品
-
+      let or_d = {
+         ...order_data
+      }
+      let l = [...or_d.goodsList]
+      l.splice(delete_id,1)
+      or_d.goodsList = l
+      or_d.money = conCulte(l)
+      setUserOrder(or_d)
+      Taro.setStorageSync('order',or_d)
    }
    const targetChange = (value:string,fun:(e:any)=>void)=>{
           fun(value)
         if(steps===0){
          setIsPost(code!=''&&phone!='')
-        }else {
-
         }
    }
    const handleModalShow = (e)=>{
       switch(e){
          case 'delete':
-            return <View style={{textAlign:'center'}}>确认删除该商品吗？</View>
+            return <View style={{textAlign:'center',lineHeight:'80px'}}>确认删除该商品吗？</View>
          case 'tel':
             return <View className={style.custom_ipt_box}>
                    <View className={style.custom_ipt_title}>修改手机号</View>
@@ -135,17 +208,28 @@ export default ()=>{
        
    }
    const handleModalOK = ()=>{
+      let d = {
+         ...user_data
+       }
+       
       switch(modal_type){
          case 'delete':
-            deletePro()
-            return setModal(false)
+          deletePro()
+            break;
          case 'tel':
-            return setModal(false)
+            d.phone = custom_tel
+            setUserData(d)
+            Taro.setStorageSync('costom', d)
+            break;
          case 'name':
-            return setModal(false)
+             d.phone = custom_name
+             setUserData(d)
+             Taro.setStorageSync('costom', d)
+             break;
          default:
-            return setModal(false)
+            return 
       }
+      setModal(false)
    }
    const clickModal = (e)=>{
       setModalEle(e)
@@ -157,6 +241,12 @@ export default ()=>{
    const setInfoBox = (text:string)=>{
        setInfoText(text)
        setInfo(true)
+   }
+   const setCustomAddress = (text:string)=>{
+      let d = {...order_data}
+      d.address = text
+      setUserOrder(d)
+      Taro.setStorageSync('order',d)
    }
    return (<View className={style.box} >
         <PopInfo show={info_show} setShow={setInfo}  title={info_text} time={10} />
@@ -180,17 +270,17 @@ export default ()=>{
             <View style={{padding:'0 15px',boxSizing:'border-box'}}>
             <View className={style.name_ipt_item}>
                <View className={style.name_item_lebal}>业主姓名</View>
-               <View  className={style.name_item_text} onClick={()=>clickModal('name')}>{custom_name===''?<View className={style.put_info}>点击输入业主姓名</View>:custom_name}</View>
+               <View  className={style.name_item_text} onClick={()=>clickModal('name')}>{user_data.name===''?<View className={style.put_info}>点击输入业主姓名</View>:user_data.name}</View>
                <AtIcon value='chevron-right'  size='15' color='#A8A8A8' onClick={()=>clickModal('name')}></AtIcon>
             </View>
             <View className={style.name_ipt_item}>
                <View className={style.name_item_lebal}>业主手机号</View>
-               <View  className={style.name_item_text}  onClick={()=>clickModal('tel')} >{custom_tel===''?<View className={style.put_info}>点击输入业主手机号</View>:custom_tel}</View>
+               <View  className={style.name_item_text}  onClick={()=>clickModal('tel')} >{user_data.name===''?<View className={style.put_info}>点击输入业主手机号</View>:user_data.phone}</View>
                <AtIcon value='chevron-right'  size='15' color='#A8A8A8' onClick={()=>clickModal('tel')} />
             </View>
             <View className={style.name_ipt_item}>
                <View className={style.name_item_lebal}>业主地址</View>
-               <Input className={style.name_ipt_text}   placeholder='请输入地址' value={custom_address} onInput={(e)=>setCustomAddress(e.detail.value)} />
+               <Input className={style.name_ipt_text}   placeholder='请输入地址' value={order_data.address} onInput={(e)=>setCustomAddress(e.detail.value)} />
                {/* <View  className={style.name_item_text} onClick={()=>handleMapShow()}>{custom_address===''?<View className={style.put_info}><Image className={style.map_icon} src={map_icon} /><View>选择地址</View></View>:custom_address}</View>
                <AtIcon value='chevron-right'  size='15' color='#A8A8A8' /> */}
             </View>
@@ -202,19 +292,19 @@ export default ()=>{
             <ScrollView scrollY className={style.pro_main}>
             <View style={{padding:'0 15px',boxSizing:'border-box'}}>
                 {
-                     pro_list.map((ele:TPro)=>{
+                     order_data.goodsList.map((ele:TPro,i:number)=>{
                         return <View className={style.pro_item} key={ele.code}>
                                <View className={style.pro_item_type}>{ele.bcn}:</View>
                                  <View className={style.pro_item_name} >
                                     <View style={{width:'284px'}}>{ele.name}</View>
                                     <View className={style.pro_delete_text} onClick={()=>{
-                                       setDeleteId(ele.code)
+                                       setDeleteId(i)
                                        clickModal('delete')
                                     }}>删除</View>
                                  </View>
                                <View className={style.pro_item_bottom}>
                                  <View style={{marginRight:'12px'}}>ID: {ele.code}</View>
-                                  <View>商品价格 {ele.pr}</View>
+                                  <View>商品价格 ￥{ele.pr}</View>
                                </View>
                         </View>
                      })
@@ -228,11 +318,11 @@ export default ()=>{
            </ScrollView>
                </>)
          }
-         <CheckEmpty isShow={total_num>0&&steps!=0} empty_ele={<View />} >
-            <View className={style.num_show_text}>商品总金额: {total_num}</View>
+         <CheckEmpty isShow={order_data.money>0&&steps!=0} empty_ele={<View />} >
+            <View className={style.num_show_text}>商品总金额: ￥{order_data.money}</View>
          </CheckEmpty>
          <View className={style.bottom_btn_box} >
-            <Button className={style.bottom_btn} style={isPost?{}:{
+            <Button className={style.bottom_btn} style={isPost||steps===1?{}:{
                backgroundColor:'#003aa56e',
                boxShadow:'2px 2px 2px  #003aa531'
             }} onClick={postDataSteps}>提交</Button>

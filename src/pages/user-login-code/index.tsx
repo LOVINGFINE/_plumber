@@ -15,7 +15,7 @@ import {
       postCodeMessage, // 获取登录信息
    } from '@/models/user'
 export default ()=>{
-      const [code,setCode] = useState<string>('714155')
+      const [code,setCode] = useState<string>('')
       const [pop_show,setPopShow] = useState<boolean>(false)
       const [pop_text,setText] = useState<string>('')
       const [phone,setPhone] = useState<string>('')

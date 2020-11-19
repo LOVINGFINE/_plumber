@@ -26,11 +26,16 @@ export default ()=>{
    useEffect(()=>{
     onPageChange(page)
     getComTop().then(res=>{
-      let {leftTotal,reflectTotal} = res.data
-      setData({
-        total:leftTotal,
-        visable:reflectTotal
-      })
+      if(res.code===200){
+        let {
+          leftTotal,
+          reflectTotal
+        } = res.data
+        setData({
+          total: leftTotal,
+          visable: reflectTotal
+        })
+      }
     })
    },[])
    const onPageChange = (p:number)=>{
@@ -39,11 +44,13 @@ export default ()=>{
         setMore(false)
         setRefresh(false)
          let {code,data} = res
-         if(p===1){
+         if(code===200){
+          if(p===1){
             setList(data)
          }else {
            let l = list.concat(data)
             setList(l)
+         }
          }
        })
    }

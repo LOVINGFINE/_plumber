@@ -1,10 +1,9 @@
 import { _get, _post } from "../services/request";
-
+import {Tr} from '../pages/product/type'
 export const getOrderList = (page:number ) => {
   return _post(`/hydropower/order/search/list`, {
     pageNum: page,
-    pageSize: 30,
-    search: ''
+    pageSize: 30
   });
 };
 export const searchOrderList = (page:number,text:string ) => {
@@ -26,3 +25,11 @@ export const postCodeUser = (data:{
 })=>{
   return _post(`/hydropower/order/exchange/info`,data)
 }
+
+export const postOrderCreate = (data:Tr) =>{
+  return _post(`/hydropower/order/commit`,data)
+}
+
+export const getGoodsWith = (info:string)=>{
+  return _post(`/hydropower/order/scan/info`,{scanInfo:info})
+} 

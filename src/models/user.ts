@@ -65,6 +65,14 @@ export const modifyPhoneNumber = (data: {
 export const pickTimeSolar = (time:number)=>{
    return _post(`/hydropower/login/obtain/lunar`,{solarTime:time})
 }
+
+export const putPhoneWith = (data:{
+  code: string
+	encryptData: string
+	iv: string
+})=>{
+   return _post(`/hydropower/login/obtain/weixin/phone`,data)
+}
 export const postFileAvator = async (path:string)=>{
   // 上传头像
   let {data} = await Taro.uploadFile({

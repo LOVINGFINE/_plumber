@@ -13,25 +13,28 @@ export default () => {
   const [page, setPage] = useState<number>(1);
   const [refresh, setRefresh] = useState<boolean>(false);
   const [more, setMore] = useState<boolean>(false);
+  useEffect(()=>{
+    onPageChange(page)
+  },[])
   const onPageChange = (p: number) => {
     setPage(p);
      getOrderList(p).then(res=>{
          if(res.code===200){
            let {data} = res
-           console.log(res);
-           
+           setRefresh(false);
+           setMore(false);
            if(p===1){
              // 刷新
              setList(data)
            }else {
              // 加载更多
+             let l = list
+             l.concat(data)
+             setList(l)
            }
          }
      })
-    setTimeout(() => {
-      setRefresh(false);
-      setMore(false);
-    }, 3000);
+
   };
   return (
     <View className={style.box}>
