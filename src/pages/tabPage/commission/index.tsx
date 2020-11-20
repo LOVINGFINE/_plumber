@@ -4,6 +4,7 @@ View,
 Image,
 ScrollView
 } from '@tarojs/components'
+import Taro from '@tarojs/taro'
 import ComList from './components/comList'
 import CheckEmpty from '@/components/empty'
 import style from './index.module.less'
@@ -15,7 +16,11 @@ import InfoText from '@/components/Pop-ups/text'
  * @interface Cllist
  * 记录字段 类型
  */
-export default ()=>{
+export default ({
+  checkToken
+}:{
+  checkToken:(fun:()=>void,e?:()=>void)=>void
+})=>{
    const [user_data,setData] = useState<{total:number,visable:number}>({
         total:0,
         visable:0
@@ -54,14 +59,16 @@ export default ()=>{
              let l = list.concat(data)
               setList(l)
            }
-         }else {
-          setInfoBox(message)
          }
-       })
+      })
    }
    const setInfoBox = (text:string)=>{
     setInfoText(text)
     setInfo(true)
+}
+const tokenIsEmpty = ()=>{
+  let a = Taro.getStorageSync('token') || ''
+  return a===''
 }
    return (<View className={style.box}>
      <InfoText title={info_text} show={info_show} setShow={setInfo} />
@@ -82,19 +89,17 @@ export default ()=>{
         </View>
         <View>
          <ScrollView
-         refresherEnabled
+         refresherEnabled={!tokenIsEmpty()}
          refresherTriggered={refresh}
          refresherBackground="#F8F8F8"
          refresherThreshold={60}
-         lowerThreshold={10}
-         onRefresherRefresh={()=>{
-           setRefresh(true)
-           onPageChange(1)
-         }}
+         lowerThreshold={0}
+         onRefresherRefresh={()=>{setRefresh(true)
+          onPageChange(1)}}
          onScrollToLower={()=>{
           if(list.length>0){
             setMore(true);
-          onPageChange(page + 1);
+            onPageChange(page + 1);
           }
          }}
          scrollY className={style.main}>

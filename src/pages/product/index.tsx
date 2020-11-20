@@ -11,13 +11,11 @@ ScrollView,
 import PopInfo from '@/components/Pop-ups/info'
 import PopModal from '@/components/Pop-ups/modal'
 import style from './style.module.less'
-import {map_icon, order, user} from '@/assets/model'
 import CheckEmpty from '@/components/empty'
 import {postCodeUser,postOrderCreate,getGoodsWith} from '@/models/order'
 import {TPro} from '../tabPage/order/type'
 import {Tr} from './type'
 export default ()=>{
-   
    const [info_show,setInfo] = useState<boolean>(false)
    const [info_text,setInfoText] = useState<string>('')
    const [modal_show,setModal] = useState<boolean>(false)
@@ -25,7 +23,6 @@ export default ()=>{
    const [steps,setSteps] =  useState<number>(0)
    const [modal_type,setModalEle] = useState<any>('tel')
    const [loading,setLoad] = useState<boolean>(false)
-   // 
    const [delete_id,setDeleteId] = useState<number>(0)
   /**
    * 表单数据

@@ -14,31 +14,42 @@ import PageLayout from '../../layout/pageLayout'
 export default ()=>{
       const [current,setCurrent] = useState<number>(0)
       const [text_show,setShow] = useState<boolean>(false)
+      const [show_title,setTitle] = useState<string>('')
       useEffect(()=>{
         if(getCurrentInstance().router.params.isFrist){
-          setShow(true)
+          handleTextInfo('注册成功')
         }
         if(getCurrentInstance().router.params.login){
           setCurrent(2)
         }
       },[])
-   return (<View className={style.box} >
-    <PopText title={'注册成功'} show={text_show} setShow={setShow} />
-     <ShowPage current={current} />
-     <TabBar current={current} setCurrent={setCurrent} />
- </View>
-  )
-}
+      const handleTextInfo = (text:string)=>{
+        setTitle(text)
+        setShow(true)
+      }
 
-const ShowPage = ({current}:{current:number})=>{
-    switch(current){
-        case 0:
-           return <Order />  
-        case 1:
-         return <ComPage />  
-        case 2:
-         return <MyHome />  
-        default:
-            return <View></View>
-    }
+      const checkToken = (fun:()=>void,e?:()=>void)=>{
+          let t = Taro.getStorageSync('token') || ''
+          if(t!=''){
+            fun()
+          }else {
+            handleTextInfo('请先登录后再试')
+            if(e){
+              e()
+            }
+          }
+      }
+   return (<View className={style.box}>
+     <PopText title={show_title} show={text_show} setShow={setShow} />
+     <View style={{width:'100%',height:'100%',display:current!=0?'none':'',overflow: "hidden"}}>
+          <Order checkToken={(f,e)=>checkToken(f)} />
+     </View>
+     <View style={{width:'100%',height:'100%',display:current!=1?'none':'',overflow: "hidden"}}>
+         <ComPage checkToken={(f,e)=>checkToken(f,e)} />
+     </View>
+     <View style={{width:'100%',height:'100%',display:current!=2?'none':'',overflow: "hidden"}}>
+       <MyHome checkToken={checkToken} />
+     </View>
+     <TabBar current={current} setCurrent={setCurrent} />
+   </View>)
 }

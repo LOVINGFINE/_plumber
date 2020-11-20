@@ -1,46 +1,62 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, } from "react";
 import Taro from "@tarojs/taro";
 import ChangeIpt from "./components/changeIpt";
+import {AtCountdown} from 'taro-ui'
 import { View, Input } from "@tarojs/components";
 import style from "./index.module.less";
 import PopUp from "@/components/Pop-ups/text";
 import { getVerificationCode, modifyPhoneNumber } from "@/models/user";
 export default () => {
-  const time = 60;
   const [old, setOld] = useState<string>("");
   const [newVal, setNewVal] = useState<string>("");
   const [pop_show, setPopShow] = useState<boolean>(false);
   const [code, setCode] = useState<string>("");
   const [info_text, setInfoText] = useState<string>("");
+  const [forTime,setForTime] = useState<boolean>(false)
   useEffect(() => {
     let d = Taro.getStorageSync("user") || { phone: "" };
     setOld(d.phone);
   }, []);
   const handleSend = ()=>{
-    modifyPhoneNumber({
-      code: code,
-      newPhone: newVal,
-      oldPhone: old
-    }).then(e => {
-      if (e.code === 200) {
-        // 验证规则(手机号、验证码)
-        console.log("修改手机号成功");
-        Taro.redirectTo({ url: '/pages/person-set/index' });
-      }else {
-        setInfoText(e.message)
-        setPopShow(true)
-      }
-    });
+    if(code.length===6){
+      modifyPhoneNumber({
+        code: code,
+        newPhone: newVal,
+        oldPhone: old
+      }).then(e => {
+        if (e.code === 200) {
+          // 验证规则(手机号、验证码)
+          Taro.redirectTo({ url: '/pages/person-set/index' });
+        }else {
+          setInfoText(e.message)
+          setPopShow(true)
+        }
+      });
+    }else {
+      setInfoText('请填入6位验证码')
+      setPopShow(true)
+    }
   }
 
   const handleCodeSend = ()=>{
-    getVerificationCode(old).then(e => {
-      if (e.code === 200) {
-        console.log("获取验证码成功");
-      }
-    });
+    if(newVal!==''){
+      setForTime(true)
+      getVerificationCode(old).then(e => {
+        if (e.code === 200) {
+          setForTime(true)
+        } else {
+          setInfoText(e.message)
+          setPopShow(true)
+        }
+      });
+    }else {
+      setInfoText('请填入新的手机号')
+      setPopShow(true)
+    }
   }
-
+ const onTimeUp=()=>{
+      setForTime(false)
+  }
   return (
     <View className={style.username_box}>
       <PopUp show={pop_show} setShow={setPopShow} title={info_text} />
@@ -73,15 +89,37 @@ export default () => {
             placeholder="请输入验证码"
             onInput={e => setCode(e.detail.value)}
           />
-          {time === 60 ? (
+          {!forTime ? (
             <View className={style.get_code} onClick={handleCodeSend}>
               获取验证码
             </View>
           ) : (
-            <View className={style.not_get}>重新获取 {time} s</View>
+            <View className={style.not_get}> 重新获取 <TimeDown onTimeUp={onTimeUp} /> s </View>
           )}
         </View>
       </ChangeIpt>
     </View>
   );
 };
+
+const TimeDown =(
+  {
+    num=60,
+    onTimeUp
+  }:{
+    num?:number,
+    onTimeUp?:()=>void
+  })=>{
+    const [time,setTime] = useState<number>(num)
+    useEffect(()=>{
+      setTimeout(()=>{
+        let t = time - 1
+        if(time>1){ 
+          setTime(t)
+        }else {
+          onTimeUp()
+        }
+      },1000)
+    },[time])
+    return <>{time}</>
+}

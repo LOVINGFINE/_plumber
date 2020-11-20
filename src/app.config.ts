@@ -1,13 +1,13 @@
 export default {
   pages: [
-    'pages/product/mapView',
     'pages/first/index',
+    'pages/person-set/phone',
+    'pages/product/mapView',
     'pages/user-login-code/user_name',
-   
     'pages/product/index',
     'pages/person-set/index',
     'pages/tabPage/order/detail',
-    'pages/person-set/phone',
+    
     'pages/person-set/name',
     
     'pages/tabPage/order/search',

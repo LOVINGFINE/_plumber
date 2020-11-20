@@ -8,7 +8,11 @@ import OrderList from "./components/order_list";
 import { Ilist } from "./type";
 import { search_icon, warning, order_bg } from "@/assets/model";
 import { getOrderList } from "@/models/order";
-export default () => {
+export default ({
+  checkToken
+}:{
+  checkToken:(fun:()=>void,e?:()=>void)=>void
+}) => {
   const [list, setList] = useState<Array<Ilist>>([]);
   const [page, setPage] = useState<number>(1);
   const [refresh, setRefresh] = useState<boolean>(false);
@@ -35,34 +39,36 @@ export default () => {
          }
      })
   };
+  const tokenIsEmpty = ()=>{
+    let a = Taro.getStorageSync('token') || ''
+    return a===''
+  }
   return (
     <View className={style.box}>
       <View className={style.top}>
         <View
           className={style.top_search}
-          onClick={() =>
-            Taro.navigateTo({ url: "/pages/tabPage/order/search" })
-          }
+          onClick={() =>checkToken(()=>Taro.navigateTo({ url: "/pages/tabPage/order/search" }))}
         >
           <Image src={search_icon} className={style.top_search_icon} />
           搜索业主姓名/业主点话/业主地址
         </View>
         <Button
           className={style.order_add}
-          onClick={() => Taro.navigateTo({ url: "/pages/product/index" })}
+          onClick={() => checkToken(()=>Taro.navigateTo({ url: "/pages/product/index" }))}
         >
           +安装产品
         </Button>
       </View>
       <ScrollView
-        refresherEnabled
+        refresherEnabled={!tokenIsEmpty()}
         refresherTriggered={refresh}
         refresherBackground="#F8F8F8"
         refresherThreshold={60}
         lowerThreshold={10}
-        onRefresherRefresh={() => {
-          setRefresh(true);
-          onPageChange(1);
+        onRefresherRefresh={()=>{
+          setRefresh(true)
+          onPageChange(1)
         }}
         onScrollToLower={() => {
           if(list.length>0){

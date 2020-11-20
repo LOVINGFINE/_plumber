@@ -175,7 +175,7 @@ export default () => {
               flex: "auto",
               justifyContent: "flex-end"
             }}
-            onClick={() => Taro.navigateTo({ url: "/pages/person-set/name" })}
+            onClick={() => Taro.redirectTo({ url: "/pages/person-set/name" })}
           >
             <View className={style.name_item_text}>{user.realName}</View>
             <AtIcon value="chevron-right" size="15" color="#A8A8A8" />
