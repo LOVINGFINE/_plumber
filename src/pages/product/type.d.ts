@@ -6,5 +6,7 @@ export interface Tr {
 	phone:string
 	goodsList:Array<TPro>
 	id: number,
-	money: number
+	money: number,
+	ownerName:string,
+	ownerPhone:string
 }

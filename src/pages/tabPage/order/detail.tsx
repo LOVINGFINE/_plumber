@@ -52,16 +52,16 @@ export default ()=>{
             <View className={style.detail_title}>业主信息</View>
             <View className={style.name_ipt_item} style={{border:'none'}}>
                <View className={style.name_item_lebal}>业主姓名:</View>
-               <View  className={style.name_item_text}>{order_data.name}</View>
+               <View  className={style.name_item_text_top}>{order_data.name}</View>
                
             </View>
             <View className={style.name_ipt_item} style={{border:'none'}}>
                <View className={style.name_item_lebal}>业主电话:</View>
-               <View  className={style.name_item_text}>{order_data.phone}</View>
+               <View  className={style.name_item_text_top}>{order_data.phone}</View>
             </View>
             <View className={style.name_ipt_item} style={{border:'none'}}>
                <View className={style.name_item_lebal} >业主地址:</View>
-               <View  className={style.name_item_text}>{order_data.address}</View>
+               <View  className={style.name_item_text_top}>{order_data.address}</View>
             </View>
          </View>
          <View style={{padding:'20px 15px 0 15px',boxSizing:'border-box',backgroundColor:'#fff',marginBottom:'10px'}}>
@@ -69,21 +69,11 @@ export default ()=>{
             <View className={style.name_pro_item}>
                <View className={style.name_pro_lebal}>安装商品:</View>
                <View  className={style.name_pro_content}>
-                   {
-                       order_data.goodsList.map(((ele:TPro)=>{
-                           return <View className={style.pro_list_item} key={ele.code}>
-                               <View className={style.pro_list_item_title}>{ele.name}</View>
-                               <View className={style.pro_list_item_dec}>
-                                   <View style={{marginRight:'6px'}}>ID:{ele.code}</View>
-                               <View>￥ {ele.pr/100} x {ele.ct}</View>
-                                </View>
-                           </View>
-                       }))
-                   }
+               <ProList list={order_data.goodsList} />
                </View>
             </View>
             <View className={style.name_ipt_item} style={{border:'none'}}>
-               <View className={style.name_item_lebal}>商品总金额</View>
+               <View className={style.name_item_lebal}>商品总佣金</View>
                <View  className={style.name_item_text} style={{paddingRight:'30px'}}>￥ {order_data.money/100}</View>
             </View>
          </View>
@@ -106,4 +96,51 @@ export default ()=>{
             </View>
          </View>
    </View>)
+}
+
+const ProList = (
+   {list=[]}:{
+      list:Array<any>
+   }
+)=>{
+   const handleList =(list:Array<any>):Array<any>=>{
+     let newList:Array<any> = [] as Array<any>      
+      list.forEach(item=>{
+          let i = newList.findIndex(e=>e.scn===item.title)
+          if(i===-1){
+              newList.push({
+                  title:item.scn,
+                  list:[{
+                   ...item
+                  }]
+              })
+          }else {
+              newList[i].list.push({
+               ...item
+              })
+          }
+      })
+     
+      return  newList
+  }
+   return <>
+   {
+      handleList(list).map(item=>{
+         return <View key={item.code}>
+            <View className={style.pro_list_item_title} style={{fontSize:'18px',marginBottom:'12px'}}>{item.title}:</View>
+                {
+                   item.list.map(ele=>{
+                      return <View className={style.pro_list_item} key={ele.code}>
+                      <View className={style.pro_list_item_title}>{ele.name}</View>
+                      <View className={style.pro_list_item_dec}>
+                      <View style={{marginRight:'6px'}}>ID:{ele.code.slice(0,12)}{ele.code.length>11?'...':''}</View>
+                           <View>￥ {ele.pr/100}</View>
+                       </View>
+                  </View>
+                   })
+                }
+         </View>
+      })
+   }
+   </>
 }

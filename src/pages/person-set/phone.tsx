@@ -13,8 +13,10 @@ export default () => {
   const [code, setCode] = useState<string>("");
   const [info_text, setInfoText] = useState<string>("");
   const [forTime,setForTime] = useState<boolean>(false)
+  const [user,setUser] = useState<any>('')
   useEffect(() => {
     let d = Taro.getStorageSync("user") || { phone: "" };
+    setUser(d)
     setOld(d.phone);
   }, []);
   const handleSend = ()=>{
@@ -26,6 +28,9 @@ export default () => {
       }).then(e => {
         if (e.code === 200) {
           // 验证规则(手机号、验证码)
+          let a = {...user}
+          a.phone = newVal
+          Taro.setStorageSync('user',a)
           Taro.redirectTo({ url: '/pages/person-set/index' });
         }else {
           setInfoText(e.message)

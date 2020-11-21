@@ -15,6 +15,7 @@ import CheckEmpty from '@/components/empty'
 import {postCodeUser,postOrderCreate,getGoodsWith} from '@/models/order'
 import {TPro} from '../tabPage/order/type'
 import {Tr} from './type'
+import {map_icon} from '@/assets/model'
 export default ()=>{
    const [info_show,setInfo] = useState<boolean>(false)
    const [info_text,setInfoText] = useState<string>('')
@@ -37,26 +38,22 @@ export default ()=>{
       phone:'',
       goodsList:[],
       id: 0,
-      money: 0 
-   })
-   const [user_data,setUserData] = useState<any>({
-      name: '',
-      phone: '',
+      money: 0 ,
+      ownerName:'',
+      ownerPhone:''
    })
    useEffect(()=>{
       let d = Taro.getStorageSync('user') || {phone:''}
       setPhone(d.phone)
    },[])
    useEffect(()=>{
-      let u  = Taro.getStorageSync('costom')
       let id = getCurrentInstance().router.params.id || ''
       if(id!=''){
          setSteps(1)
          let order = Taro.getStorageSync('order')
          setUserOrder(order)
-         setUserData(u)
-         setCostomName(u.name)
-         setCostomTel(u.phone)
+         setCostomName(order.ownerName)
+         setCostomTel(order.ownerPhone)
       }
       // setCustomAddress(getCurrentInstance().router.params.id || '')
    },[])
@@ -111,29 +108,39 @@ export default ()=>{
                   setCostomName(data.name)
                   setCostomTel(data.phone)
                   let d = {...order_data}
-                  let u = {...user_data}
-                  u.phone = data.phone
-                  u.name = data.name
+                  d.ownerPhone = data.phone
+                  d.ownerName = data.name
                   d.id = data.id
                   d.codeId = data.codeId
                   d.phone = phone
                   setUserOrder(d)
-                  setUserData(u)
                   Taro.setStorageSync('order',d)
-                  Taro.setStorageSync('costom',u)
                   setSteps(1)
                }
             }) 
          }else {
             // 提交安装单
-            if(order_data.address!=''){
-               commitOrder()
-            }else {
-               setLoad(false)
-               setInfoBox('请填写地址')
+
+            if(order_data.ownerName!=''){
+               
+               if(regPhone(order_data.ownerPhone)){
+                  if(order_data.address!=''){
+                     commitOrder()
+                  }else {
+                     setLoad(false)
+                     setInfoBox('请填写地址')
+                  }
+               }else {
+                  setInfoBox('请填入有效的手机号')
+               }
+            }else{
+               setInfoBox('请填入业主姓名')
             }
          }
       }
+   }
+   const regPhone = (text:string) =>{
+        return /^1[3456789]d{9}$/.test(text)
    }
    const commitOrder = ()=>{
       if(order_data.goodsList.length>0){
@@ -143,6 +150,8 @@ export default ()=>{
                let {code,message} = res
                if(code===200){
                   Taro.reLaunch({ url: "/pages/first/index" });
+                  Taro.setStorageSync('order',null)
+                  Taro.setStorageSync('costom',null)
                }else {
                   setInfoBox(message)
                }
@@ -208,7 +217,7 @@ export default ()=>{
    }
    const handleModalOK = ()=>{
       let d = {
-         ...user_data
+         ...order_data
        }
        
       switch(modal_type){
@@ -216,27 +225,49 @@ export default ()=>{
           deletePro()
             break;
          case 'tel':
-            d.phone = custom_tel
-            setUserData(d)
-            Taro.setStorageSync('costom', d)
+            d.ownerPhone = custom_tel
+            
             break;
          case 'name':
-             d.phone = custom_name
-             setUserData(d)
-             Taro.setStorageSync('costom', d)
+             d.ownerName = custom_name
+             Taro.setStorageSync('order', d)
              break;
          default:
             return 
       }
       setModal(false)
    }
+   const changeComData = (type:string,text:string) =>{
+      let d = {
+         ...order_data
+       }
+      switch(type){
+         case 'delete':
+          deletePro()
+            break;
+         case 'tel':
+            setCostomName(text)
+            d.ownerPhone = text
+            setUserOrder(d)
+           
+            break;
+         case 'name':
+            setCostomTel(text)
+             d.ownerName = text
+             setUserOrder(d)
+             break;
+         default:
+            return 
+      }
+      Taro.setStorageSync('order', d)
+   }
    const clickModal = (e)=>{
       setModalEle(e)
       setModal(true)
    }
-   // const handleMapShow = ()=>{
-   //    Taro.redirectTo({url:'/pages/product/mapView?id='+order_data.id})
-   // }
+   const handleMapShow = ()=>{
+      Taro.redirectTo({url:'/pages/product/mapView?id='+order_data.id})
+   }
    const setInfoBox = (text:string)=>{
        setInfoText(text)
        setInfo(true)
@@ -269,19 +300,25 @@ export default ()=>{
             <View style={{padding:'0 15px',boxSizing:'border-box'}}>
             <View className={style.name_ipt_item}>
                <View className={style.name_item_lebal}>业主姓名</View>
-               <View  className={style.name_item_text} onClick={()=>clickModal('name')}>{user_data.name===''?<View className={style.put_info}>点击输入业主姓名</View>:user_data.name}</View>
-               <AtIcon value='chevron-right'  size='15' color='#A8A8A8' onClick={()=>clickModal('name')}></AtIcon>
+               <Input className={style.name_ipt_text}   placeholder='请输入业主姓名' value={custom_name} onInput={(e)=>{
+               changeComData('name',e.detail.value)
+               }} />
+
+               {/* <View  className={style.name_item_text} onClick={()=>clickModal('name')}>{user_data.name===''?<View className={style.put_info}>点击输入业主姓名</View>:user_data.name}</View>
+               <AtIcon value='chevron-right'  size='15' color='#A8A8A8' onClick={()=>clickModal('name')}></AtIcon> */}
             </View>
             <View className={style.name_ipt_item}>
                <View className={style.name_item_lebal}>业主手机号</View>
-               <View  className={style.name_item_text}  onClick={()=>clickModal('tel')} >{user_data.name===''?<View className={style.put_info}>点击输入业主手机号</View>:user_data.phone}</View>
-               <AtIcon value='chevron-right'  size='15' color='#A8A8A8' onClick={()=>clickModal('tel')} />
+               <Input className={style.name_ipt_text}   placeholder='请输入手机号' value={custom_tel} onInput={(e)=>{changeComData('tel',e.detail.value)}} />
+
+               {/* <View  className={style.name_item_text}  onClick={()=>clickModal('tel')} >{user_data.name===''?<View className={style.put_info}>点击输入业主手机号</View>:user_data.phone}</View>
+               <AtIcon value='chevron-right'  size='15' color='#A8A8A8' onClick={()=>clickModal('tel')} /> */}
             </View>
             <View className={style.name_ipt_item}>
                <View className={style.name_item_lebal}>业主地址</View>
-               <Input className={style.name_ipt_text}   placeholder='请输入地址' value={order_data.address} onInput={(e)=>setCustomAddress(e.detail.value)} />
-               {/* <View  className={style.name_item_text} onClick={()=>handleMapShow()}>{order_data.address===''?<View className={style.put_info}><Image className={style.map_icon} src={map_icon} /><View>选择地址</View></View>:order_data.address}</View>
-               <AtIcon value='chevron-right'  size='15' color='#A8A8A8' /> */}
+               {/* <Input className={style.name_ipt_text}   placeholder='请输入地址' value={order_data.address} onInput={(e)=>setCustomAddress(e.detail.value)} /> */}
+               <View  className={style.name_item_text} onClick={()=>handleMapShow()}>{order_data.address===''?<View className={style.put_info}><Image className={style.map_icon} src={map_icon} /><View>选择地址</View></View>:order_data.address}</View>
+               <AtIcon value='chevron-right'  size='15' color='#A8A8A8' />
             </View>
             <View className={style.name_ipt_item} style={{border:'none'}}>
                <View className={style.name_item_lebal}>安装产品</View>
@@ -293,7 +330,7 @@ export default ()=>{
                 {
                      order_data.goodsList.map((ele:TPro,i:number)=>{
                         return <View className={style.pro_item} key={ele.code}>
-                               <View className={style.pro_item_type}>{ele.bcn}:</View>
+                               <View className={style.pro_item_type}>{ele.scn}:</View>
                                  <View className={style.pro_item_name} >
                                     <View style={{width:'284px'}}>{ele.name}</View>
                                     <View className={style.pro_delete_text} onClick={()=>{
@@ -302,8 +339,8 @@ export default ()=>{
                                     }}>删除</View>
                                  </View>
                                <View className={style.pro_item_bottom}>
-                                 <View style={{marginRight:'12px'}}>ID: {ele.code}</View>
-                                  <View>商品价格 ￥{ele.pr/100}</View>
+                                 <View style={{marginRight:'12px'}}>ID: {ele.code.slice(0,8)}{ele.code.length>8?'...':''}</View>
+                                  <View>商品佣金 ￥{ele.pr/100}</View>
                                </View>
                         </View>
                      })

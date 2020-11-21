@@ -84,7 +84,7 @@ export default ({
   };
   return (
     <View className={style.box}>
-      <AtToast isOpened={loading} text="登录中" hasMask={true} duration={0} status="loading"></AtToast>
+      <AtToast isOpened={loading} text="登录中" hasMask={true} duration={10000} status="loading"></AtToast>
       <PopUp
         show={pop_show}
         setShow={setPopShow}
@@ -97,7 +97,7 @@ export default ({
         />
         <View className={style.message_title_box}>
           <View className={style.message_title}>
-            {token != "" ? user.realName : "未登录"}
+            {token != "" ? user.outletsName : "未登录"}
           </View>
           <View className={style.message_text}>
             {token != "" ? user.phone : "登录后可使用"}
@@ -106,8 +106,7 @@ export default ({
         {token != "" ? (
           <View
             className={style.go_endit}
-            onClick={() => Taro.navigateTo({ url: "/pages/person-set/index" })}
-          >
+            onClick={() => Taro.navigateTo({ url: "/pages/person-set/index" })}>
             设置&gt;
           </View>
         ) : (

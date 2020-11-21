@@ -56,6 +56,8 @@ export default ()=>{
         if(url!=''){
             let order = Taro.getStorageSync('order')
             order.address = url
+            console.log(order);
+            
             Taro.setStorageSync('order',order)
         }
         Taro.redirectTo({url:`/pages/product/index?id=${id}`})
@@ -95,14 +97,14 @@ export default ()=>{
                          }} key={ele}>
                              <View className={style.map_item_con}>
                                 <View className={style.map_item_title}>{ele}</View>
-                                <View className={style.map_item_dec}>
-                                    {/* <View>{ele.destance}m</View>
+                                {/* <View className={style.map_item_dec}>
+                                    <View>{ele.destance}m</View>
                                     <View className={style.map_item_line} />
-                                    <View>{ele.dec}</View> */}
-                                </View>
+                                    <View>{ele.dec}</View>
+                                </View> */}
                              </View>
                             {
-                                i===select_add? <AtIcon value='check' size={20} color='#003BA5' />:""
+                                i===select_add? <AtIcon value='check' size={20} color='#003BA5' />:<View />
                             }
                          </View>
                      })

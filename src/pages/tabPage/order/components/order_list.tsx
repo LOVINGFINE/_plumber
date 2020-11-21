@@ -32,10 +32,10 @@ export default ({list}:{list:Array<Ilist>})=>{
                     </View>
                     <View className={style.item_message}>
                        <View className={style.item_message_lebal}>安装商品</View>
-                       <View className={style.item_message_text}>{ele.goodsList.length>0?`${ele.goodsList[0].name} ID${ele.goodsList[0].code}...等${ele.goodsList.length}件商品`:'暂无信息'}</View>
+                       <View className={style.item_message_text}>{ele.goodsList.length>0?`${ele.goodsList[0].name.slice(0,8)}${ele.goodsList[0].name.length>8?'...':''} ID${ele.goodsList[0].code.slice(0,6)}${ele.goodsList[0].code.length>6?'...':''} ${ele.goodsList.length>1?`等${ele.goodsList.length}件商品`:''}`:'暂无信息'}</View>
                     </View>
                     <View className={style.item_message}>
-                       <View className={style.item_message_lebal}>商品价格</View>
+                       <View className={style.item_message_lebal}>订单佣金</View>
                        <View className={style.item_message_text}>{ele.money/100}</View>
                     </View>
                     <View className={style.item_message}>

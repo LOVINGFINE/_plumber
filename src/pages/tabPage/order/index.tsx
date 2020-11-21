@@ -8,6 +8,33 @@ import OrderList from "./components/order_list";
 import { Ilist } from "./type";
 import { search_icon, warning, order_bg } from "@/assets/model";
 import { getOrderList } from "@/models/order";
+const test = [
+  {
+     address: '咳咳咳咳dasdasdas咳咳咳咳咳咳咳咳咳咳咳dasdasdas咳咳咳咳咳咳咳',
+    goodsList: [
+        {
+        bcn: "string",
+         code: "string",
+       ct: 1,
+       name: '咳咳咳咳dasdasdas咳咳咳咳咳咳咳',
+       pr: 8989,
+       scn: "string"
+        }
+     ],
+    hyName: "string",
+    hyPhone: "string",
+    hyUserId: 9999,
+    id: 333,
+    installStatus: 0,
+    money: 40000,
+    name: '雄安',
+    orderCreateTime: 19999999,
+    orderUpdateTime: 1999999,
+    outletsId: 0,
+    outletsName: 'hahaha',
+    phone: '18888888'
+  }
+]
 export default ({
   checkToken
 }:{
@@ -51,7 +78,7 @@ export default ({
           onClick={() =>checkToken(()=>Taro.navigateTo({ url: "/pages/tabPage/order/search" }))}
         >
           <Image src={search_icon} className={style.top_search_icon} />
-          搜索业主姓名/业主点话/业主地址
+          搜索业主姓名/业主电话/业主地址
         </View>
         <Button
           className={style.order_add}

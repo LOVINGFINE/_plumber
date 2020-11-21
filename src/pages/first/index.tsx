@@ -33,7 +33,7 @@ export default ()=>{
           if(t!=''){
             fun()
           }else {
-            handleTextInfo('请先登录后再试')
+            handleTextInfo('请前往“我的”登录')
             if(e){
               e()
             }
