@@ -1,22 +1,24 @@
 import React, { Component, useState, useEffect } from "react";
 import Taro from "@tarojs/taro";
-import { AtIcon } from "taro-ui";
+import { AtIcon,AtToast } from "taro-ui";
 import { View, Button, Input, Image,Picker } from "@tarojs/components";
 import style from "./index.module.less";
-import PopUp from "@/components/Pop-ups/text";
+import PopUp from "@/components/Pop-ups/info";
 import { user_icon } from "@/assets/model";
-import { modifyAvatar,pickTimeSolar,modifySolarTime,postFileAvator,modifyInfo } from "@/models/user";
+import { modifyAvatar,modifySolarTime,postFileAvator,modifyInfo } from "@/models/user";
 import {Iuser} from '../tabPage/myhome/type'
 import mapData from '@/utils/map'
+import {calendar} from '@/utils/transformTime'
 import {
-  checkRegister, // 检查是否注册
   getUserInfo // 获取登录信息
 } from "@/models/user";
-import { filterTimeDay,opTimeUnix,filterTimeDayN } from "@/utils/filter";
+import { opTimeUnix,filterTimeDayN } from "@/utils/filter";
 export default () => {
+  const [loading,setLoading] = useState<boolean>(false)
   const [pop_show, setPopShow] = useState<boolean>(false);
+  const [pop_text,setPopText] = useState<string>('')
   const [time,setTime] = useState<string>('')
-  const [time_n,setTimeN] = useState<number>(0)
+  const [time_n,setTimeN] = useState<string>('')
   const [citys,setCity] = useState<any>([])
   const [c,setC] = useState<number>(0)
   const [p,setP] = useState<number>(0)
@@ -31,7 +33,7 @@ export default () => {
     provinceName:''
   })
   useEffect(() => {
-    getUserMessage();
+    getUserMessage(false);
   }, []);
   const changeImage = () => {
     Taro.chooseImage({
@@ -44,10 +46,7 @@ export default () => {
             if(code===200){
                 modifyAvatar({ image: data }).then(e => {
               if (e.code === 200) {
-                let u = {...user}
-                u.image = tempFilePaths[0]
-                setUser(u)
-                getUserMessage()
+                getUserMessage(true)
               }
               });
             }
@@ -71,59 +70,39 @@ export default () => {
     });
     Taro.reLaunch({ url: "/pages/first/index?login=true" });
   };
-  const getUserMessage = () => {
+  const getUserMessage = (type) => {
     getUserInfo().then(res => {
-      const { code, data } = res;
+      const { code, data,message } = res;
+      setLoading(false)
       if (code === 200) {
-        pickTime(data.solarTime)
-        setTime(filterTimeDay(data.solarTime))
+        let t_l = filterTimeDayN(data.solarTime).split('-')
+        let o:any = calendar.solar2lunar(t_l[0],t_l[1],t_l[2])
+        setTime(filterTimeDayN(data.solarTime))
+        setTimeN(o.lunarDate)
         Taro.setStorageSync("user", data);
         setUser(data);
+        if(type){
+          setTimeout(()=>{
+            popTextAlert('修改成功')
+          },500)
+        }
       }else {
-
+        setTimeout(()=>{
+          popTextAlert(message)
+        },500)
       }
     });
   };
-  const pickTime = (t:number)=>{
-    pickTimeSolar(t).then(res=>{
-      let {data} = res
-      setTimeN(data)
-    })
-  }
-  const changeTime = (t:string)=>{
-    setTime(t)
-    modifySolarTime(opTimeUnix(t)).then(res=>{
-      let {code} = res
-      if(code===200){
-        setPopShow(true)
-        getUserMessage()
-      }
-    })
-    pickTimeSolar(opTimeUnix(t)).then(res=>{
-      let {data} = res
-      setTimeN(data)
-    })
-  }
   const changeAddress = (e)=>{
-    let d= {...user}
-    d.provinceName = mapData[e.value[0]].value
-    d.cityName = citys[e.value[1]].value
-    
-    modifyInfo({
-      solarTime:d.solarTime,
-      name:d.realName,
-      provinceName:d.provinceName,
-      cityName:d.cityName
-    }).then(res=>{
-      let {code,message} = res
-      if(code===200){
-        setPopShow(true)
-        setUser(d)
-        getUserMessage()
-      }else {
-        
-      }
-    })
+    //修改籍贯
+    if(citys.length>0){
+      let d= {...user}
+      d.provinceName = mapData[e.value[0]].value
+      d.cityName = citys[e.value[1]].value
+      modifyUserMessage(d)
+    }else {
+      popTextAlert('请选择籍贯城市名')
+    }
   }
   const onColumnChange = (e)=>{
      if(e.column===0){
@@ -133,13 +112,55 @@ export default () => {
        setC(e.value)
      }
   }
+  const changeTimeOption = (text:string,type)=>{
+    // 修改生日
+    setLoading(true)
+    let d_user= {...user}
+    let t_l = text.split('-')
+    if(type==='solar'){
+      // 处理阳历
+      let o:any = calendar.solar2lunar(t_l[0],t_l[1],t_l[2])
+      d_user.solarTime = opTimeUnix(text)
+      modifyUserMessage(d_user)
+    }else {
+      // 处理农历
+      let o:any = calendar.lunar2solar(t_l[0],t_l[1],t_l[2],'')
+      d_user.solarTime = opTimeUnix(o.date) 
+      modifyUserMessage(d_user)
+    }
+
+  }
+  const popTextAlert = (text:string) =>{
+      setPopText(text)
+      setPopShow(true)
+  }
+  const modifyUserMessage = (data:any)=>{
+      // 提交数据 
+    modifyInfo({
+      solarTime:data.solarTime,
+      name:data.realName,
+      provinceName:data.provinceName,
+      cityName:data.cityName
+    }).then(res=>{
+      let {code,message} = res
+      if(code===200){
+        getUserMessage(true)
+      }else {
+        setLoading(false)
+        setTimeout(()=>{
+          popTextAlert(message)
+        },500)
+      }
+    })
+  }
   return (
     <View className={style.username_box}>
       <PopUp
         show={pop_show}
         setShow={setPopShow}
-        title={"修改成功"}
+        title={pop_text}
       />
+      <AtToast isOpened={loading} text="检验修改" hasMask={true} duration={0} status="loading"></AtToast>
       <View
         style={{
           padding: "0 15px",
@@ -202,14 +223,21 @@ export default () => {
             mode="date"
             className={style.name_item_text}
             value={time}
-            onChange={e => changeTime(e.detail.value)}
+            onChange={e => changeTimeOption(e.detail.value,'solar')}
           >
             <View>{user.solarTime&&time != "" ? time:"请选择日期"}</View>
           </Picker>
         </View>
         <View className={style.name_ipt_item}>
           <View className={style.name_item_lebal}>阴历生日</View>
-          <Input className={style.name_item_text} disabled value={user.solarTime?filterTimeDayN(time_n):'暂无'} />
+          <Picker
+          mode="date"
+          className={style.name_item_text}
+          value={time_n}
+          onChange={e => changeTimeOption(e.detail.value,'lunar')}
+           >
+          <View>{user.solarTime&&time!=''?time_n:'暂无'}</View>
+        </Picker>
         </View>
         <View className={style.name_ipt_item} style={{ border: "none" }}>
           <View className={style.name_item_lebal}>籍贯</View>

@@ -10,7 +10,7 @@ export const filterTimeDay = (unix:number) =>{
 }
 export const filterTimeDayN = (unix:number) =>{
     
-    return moment(unix).format('YYYY-MM-DD')
+    return moment(unix).format('YYYY-M-D')
 }
 export const filterMouth = (unix:number)=>{
    return moment(unix).format('YYYY-MM')

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, } from "react";
 import Taro from "@tarojs/taro";
 import ChangeIpt from "./components/changeIpt";
-import {AtCountdown} from 'taro-ui'
 import { View, Input } from "@tarojs/components";
 import style from "./index.module.less";
 import PopUp from "@/components/Pop-ups/text";
@@ -21,28 +20,37 @@ export default () => {
   }, []);
   const handleSend = ()=>{
     if(code.length===6){
-      modifyPhoneNumber({
-        code: code,
-        newPhone: newVal,
-        oldPhone: old
-      }).then(e => {
-        if (e.code === 200) {
-          // 验证规则(手机号、验证码)
-          let a = {...user}
-          a.phone = newVal
-          Taro.setStorageSync('user',a)
-          Taro.redirectTo({ url: '/pages/person-set/index' });
-        }else {
-          setInfoText(e.message)
-          setPopShow(true)
-        }
-      });
+      if(regPhone(newVal)){
+        modifyPhoneNumber({
+          code: code,
+          newPhone: newVal,
+          oldPhone: old
+        }).then(e => {
+          if (e.code === 200) {
+            // 验证规则(手机号、验证码)
+            let a = {...user}
+            a.phone = newVal
+            Taro.setStorageSync('user',a)
+            Taro.redirectTo({ url: '/pages/person-set/index' });
+            // Taro.clearStorage()
+            // Taro.reLaunch({ url: '/pages/person-set/index?login=true' });
+          }else {
+            setInfoText(e.message)
+            setPopShow(true)
+          }
+        });
+      }else {
+        setInfoText('请填入正确的手机号')
+      }
+      
     }else {
       setInfoText('请填入6位验证码')
       setPopShow(true)
     }
   }
-
+  const regPhone = (text:string) =>{
+    return /^1[3456789]d{9}$/.test(text)
+ }
   const handleCodeSend = ()=>{
     if(newVal!==''){
       setForTime(true)

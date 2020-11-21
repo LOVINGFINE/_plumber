@@ -3,20 +3,18 @@ import Taro, { getCurrentInstance } from "@tarojs/taro";
 import { View, Button, Input } from "@tarojs/components";
 import { Picker } from "@tarojs/components";
 import style from "./index.module.less";
-import PopUp from "@/components/Pop-ups/text";
 import PopInfo from "@/components/Pop-ups/info";
 import checkEmpty from "@/utils/checkEmpty";
-import { modifyInfo,pickTimeSolar } from "@/models/user";
+import { modifyInfo } from "@/models/user";
 import { filterTimeDay,opTimeUnix,filterTimeDayN } from "@/utils/filter";
 import mapData from '@/utils/map'
+import {calendar} from '@/utils/transformTime'
 export default (props: any) => {
   // 获取本地手机号
   const phone = Taro.getStorageSync("phone");
   const [name, setName] = useState<string>("");
   const [time, setTime] = useState<string>("");
-  const [time_n, setTimeN] = useState<number>(0);
-  const [address, setAddress] = useState<string>("");
-  const [pop_show, setPopShow] = useState<boolean>(false);
+  const [time_n, setTimeN] = useState<string>('');
   const [warn_text, setWarnText] = useState<string>("");
   const [info_show, setInfoShow] = useState<boolean>(false);
   const [citys,setCity] = useState<any>([])
@@ -24,12 +22,11 @@ export default (props: any) => {
   const [p,setP] = useState<number>(0)
   const [cityName,setCityName] = useState<string>('')
   const [provinceName,setProvinceName] = useState<string>('')
+  
   const handleSend = () => {
-    if (
-      checkEmpty([name, time, time_n]) ||
-      checkEmpty([name, time, time_n]) === 0
-    ) {
-      sendInfo(checkEmpty([name, time, time_n]));
+    let isPy =  checkEmpty([name, time, time_n,provinceName])
+    if (isPy ||isPy === 0) {
+      sendInfo(isPy);
     } else {
       // 注册
       modifyInfo({ name, solarTime:opTimeUnix(time),cityName,provinceName }).then(e => {
@@ -38,7 +35,7 @@ export default (props: any) => {
             Taro.reLaunch({ url: "/pages/first/index?isFrist=true" });
           }else {
             setWarnText(e.message)
-            setPopShow(true)
+            setInfoShow(true)
           }
       });
     }
@@ -50,10 +47,10 @@ export default (props: any) => {
         setWarnText("姓名不能为空");
         break;
       case 1:
-        setWarnText("阳历生日不能为空");
+        setWarnText("生日不能为空");
         break;
       case 2:
-        setWarnText("阴历生日不能为空");
+        setWarnText("生日不能为空");
         break;
       case 3:
         setWarnText("籍贯不能为空");
@@ -63,18 +60,15 @@ export default (props: any) => {
     }
     setInfoShow(true);
   };
-  const changeTime = (t:string)=>{
-    setTime(t)
-    pickTimeSolar(opTimeUnix(t)).then(res=>{
-      if(res.code===200){
-        let {data} = res
-        setTimeN(data)
-      }
-    })
-  }
   const changeAddress = (e)=>{
-    setProvinceName(mapData[e.value[0]].value)
-    setCityName(citys[e.value[0]].value) 
+    if(citys.length>0){
+      setProvinceName(mapData[e.value[0]].value)
+      setCityName(citys[e.value[0]].value) 
+    }else {
+      setWarnText('请选择籍贯城市名')
+      setInfoShow(true);
+    }
+    
   }
   const onColumnChange = (e)=>{
      if(e.column===0){
@@ -83,6 +77,22 @@ export default (props: any) => {
      }else {
        setC(e.value)
      }
+  }
+  const changeTimeOption = (text:string,type)=>{
+    let t_l = text.split('-')
+    if(type==='solar'){
+      // 处理阳历
+      setTime(text)
+      let o:any = calendar.solar2lunar(t_l[0],t_l[1],t_l[2])
+      setTimeN(o.lunarDate)
+      
+    }else {
+      // 处理农历
+      setTimeN(text)
+      let o:any = calendar.lunar2solar(t_l[0],t_l[1],t_l[2],'')
+      setTime(o.date)
+    }
+
   }
   return (
     <View className={style.username_box}>
@@ -101,18 +111,21 @@ export default (props: any) => {
           mode="date"
           className={style.name_item_text}
           value={time}
-          onChange={e => changeTime(e.detail.value)}
+          onChange={e => changeTimeOption(e.detail.value,'solar')}
         >
           <View>{time === "" ? "请选择日期" : time}</View>
         </Picker>
       </View>
       <View className={style.name_ipt_item}>
         <View className={style.name_item_lebal}>阴历生日</View>
-        <Input
+        <Picker
+          mode="date"
           className={style.name_item_text}
-          value={filterTimeDayN(time_n)}
-          disabled
-        />
+          value={time_n}
+          onChange={e => changeTimeOption(e.detail.value,'lunar')}
+         >
+          <View>{time_n === "" ? "请选择日期" : time_n}</View>
+        </Picker>
       </View>
       <View className={style.name_ipt_item}>
         <View className={style.name_item_lebal}>籍贯</View>

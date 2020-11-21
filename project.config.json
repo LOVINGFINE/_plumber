@@ -72,8 +72,8 @@
           "scene": null
         },
         {
-          "name": "输入名字",
-          "pathName": "pages/user-login/name",
+          "name": "pages/user-login-code/user_name",
+          "pathName": "pages/user-login-code/user_name",
           "query": "",
           "scene": null
         },
