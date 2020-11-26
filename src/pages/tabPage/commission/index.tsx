@@ -33,18 +33,7 @@ export default ({
    const [more,setMore] = useState<boolean>(false)
    useEffect(()=>{
     onPageChange(page)
-    getComTop().then(res=>{
-      if(res.code===200){
-        let {
-          leftTotal,
-          reflectTotal
-        } = res.data
-        setData({
-          total: reflectTotal,
-          visable: leftTotal
-        })
-      }
-    })
+    
    },[])
    const onPageChange = (p:number)=>{
        setPage(p)
@@ -60,6 +49,18 @@ export default ({
               setList(l)
            }
          }
+      })
+      getComTop().then(res=>{
+        if(res.code===200){
+          let {
+            leftTotal,
+            reflectTotal
+          } = res.data
+          setData({
+            total: reflectTotal,
+            visable: leftTotal
+          })
+        }
       })
    }
    const setInfoBox = (text:string)=>{

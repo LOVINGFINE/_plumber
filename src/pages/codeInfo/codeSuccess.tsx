@@ -22,17 +22,18 @@ export default () => {
         return n
       }
        let {result} = res
+       console.log(res);
+       
           getGoodsWith(result).then(e=>{
                let {code,data,message} = e
                if(code===200){
-                  Taro.redirectTo({url:'/pages/codeInfo/codeSuccess'})
                   let or_d = {
                      ...order_data
                   }
                   let l = [...or_d.goodsList]
                   l.push({
                      bcn: data.bigCategory,
-                     code: data.id,
+                     code: data.goodsCode,
                      ct: 1,
                      name: data.goodsName,
                      pr: data.price,
@@ -41,14 +42,14 @@ export default () => {
                   or_d.goodsList = l
                   or_d.money = conCulte(l)
                   Taro.setStorageSync('order',or_d)
-                  
+                  Taro.redirectTo({url:'/pages/codeInfo/codeSuccess'})
                }else {
                   Taro.redirectTo({url:'/pages/codeInfo/codeError?errorText=' + message})
                }
           })
-   }).catch(()=>{
+   }).catch((res)=>{
       // 扫码失败
-      
+      Taro.redirectTo({url:'/pages/codeInfo/codeError?errorText=请联系欧普客服确认产品是否为真'})
    })
    }
   const handleCancel = () => { 

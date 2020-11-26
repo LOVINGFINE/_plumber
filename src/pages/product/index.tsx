@@ -48,9 +48,13 @@ export default ()=>{
    },[])
    useEffect(()=>{
       let id = getCurrentInstance().router.params.id || ''
+      console.log(id);
+      
       if(id!=''){
          setSteps(1)
          let order = Taro.getStorageSync('order')
+         console.log(order.goodsList);
+         
          setUserOrder(order)
          setCostomName(order.ownerName)
          setCostomTel(order.ownerPhone)
@@ -87,9 +91,9 @@ export default ()=>{
                }
           })
           
-      }).catch(()=>{
+      }).catch((res)=>{
          // 扫码失败
-         
+         Taro.redirectTo({url:'/pages/codeInfo/codeError?errorText=请联系欧普客服确认产品是否为真'})
       })
    }
    const postDataSteps = ()=>{
@@ -122,8 +126,6 @@ export default ()=>{
             // 提交安装单
 
             if(order_data.ownerName!=''){
-               console.log(regPhone(order_data.ownerPhone));
-               
                if(regPhone(order_data.ownerPhone)){
                   if(order_data.address!=''){
                      commitOrder()
@@ -249,13 +251,13 @@ export default ()=>{
           deletePro()
             break;
          case 'tel':
-            setCostomName(text)
+            setCostomTel(text)
             d.ownerPhone = text
             setUserOrder(d)
            
             break;
          case 'name':
-            setCostomTel(text)
+             setCostomName(text)
              d.ownerName = text
              setUserOrder(d)
              break;

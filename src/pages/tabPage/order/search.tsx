@@ -37,11 +37,12 @@ export default ()=>{
          setHistory(false)
          let l = h_list
          if(l.findIndex(ele=>ele===key)!=-1||l.findIndex(ele=>ele===key)===0){
-          onPageChange(page)
+              onPageChange(page)
          }else {
             l.push(key)
             Taro.setStorageSync('history',l)
             setHisList([...l])
+            onPageChange(page)
          }
    }
    const deleteHistory= ()=>{
@@ -108,31 +109,31 @@ export default ()=>{
            {
               history?(
                 <View className={style.his_box}>
-                         <View className={style.his_top}>
-                             <View>历史记录</View>
-                             <CheckEmpty isShow={h_list.length>0} empty_ele={<View />}>
-                             <Image src={his_delete} className={style.his_delete} onClick={()=>setModal(true)} />
-                             </CheckEmpty>
-                         </View>
-                         <CheckEmpty isShow={h_list.length>0} empty_ele={<View className={style.history_empty}>暂无历史搜索记录</View>}>
-                        <View className={style.his_list}>
-                         {
-                            h_list.map((ele:string)=>{
-                               return <View key={ele} className={style.his_item} onClick={()=>{
-                                 setText(ele)
-                                 handleSearch(ele)
-                               }}>{ele}</View>
-                            })
-                         }
-                         </View>
-                      </CheckEmpty>
+                     <View className={style.his_top}>
+                         <View>历史记录</View>
+                         <CheckEmpty isShow={h_list.length>0} empty_ele={<View />}>
+                         <Image src={his_delete} className={style.his_delete} onClick={()=>setModal(true)} />
+                         </CheckEmpty>
                      </View>
+                     <CheckEmpty isShow={h_list.length>0} empty_ele={<View className={style.history_empty}>暂无历史搜索记录</View>}>
+                    <View className={style.his_list}>
+                     {
+                        h_list.map((ele:string)=>{
+                           return <View key={ele} className={style.his_item} onClick={()=>{
+                             setText(ele)
+                             handleSearch(ele)
+                           }}>{ele}</View>
+                        })
+                     }
+                     </View>
+                  </CheckEmpty>
+                 </View>
                
               ):(
-                <View style={{padding:'0 15px',width:'100%',boxSizing:'border-box',marginTop:'15px'}}>
-               <CheckEmpty isShow={list.length>0} empty_ele={<Empty isText={true} />}>
-                   <OrderList list={list} />
-              </CheckEmpty>
+                <View style={{padding:'0 15px',width:'100%',boxSizing:'border-box',marginTop:'15px',backgroundColor:'#F8F8F8'}}>
+                  <CheckEmpty isShow={list.length>0} empty_ele={<Empty isText={true} />}>
+                     <OrderList list={list} />
+                  </CheckEmpty>
               </View>
               )
            }
