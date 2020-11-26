@@ -122,6 +122,7 @@ export default ()=>{
             // 提交安装单
 
             if(order_data.ownerName!=''){
+               console.log(regPhone(order_data.ownerPhone));
                
                if(regPhone(order_data.ownerPhone)){
                   if(order_data.address!=''){
@@ -131,16 +132,18 @@ export default ()=>{
                      setInfoBox('请填写地址')
                   }
                }else {
+                  setLoad(false)
                   setInfoBox('请填入有效的手机号')
                }
             }else{
+               setLoad(false)
                setInfoBox('请填入业主姓名')
             }
          }
       }
    }
    const regPhone = (text:string) =>{
-        return /^1[3456789]d{9}$/.test(text)
+        return text.length===11
    }
    const commitOrder = ()=>{
       if(order_data.goodsList.length>0){
