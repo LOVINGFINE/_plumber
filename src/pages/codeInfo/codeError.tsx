@@ -33,7 +33,7 @@ export default () => {
                   let l = [...or_d.goodsList]
                   l.push({
                      bcn: data.bigCategory,
-                     code: data.id,
+                     code: data.goodsCode,
                      ct: 1,
                      name: data.goodsName,
                      pr: data.price,
@@ -43,12 +43,12 @@ export default () => {
                   or_d.money = conCulte(l)
                   Taro.setStorageSync('order',or_d)
                }else {
-                  Taro.redirectTo({url:'/pages/codeInfo/codeError?errorText=' + message})
+                  Taro.redirectTo({url:'/pages/codeInfo/codeError?errorText=?errorText=' + message})
                }
           })
   }).catch(()=>{
      // 扫码失败
-     Taro.redirectTo({url:'/pages/codeInfo/codeError'})
+     Taro.redirectTo({url:'/pages/codeInfo/codeError?errorText=请联系欧普客服确认产品是否为真'})
   })
    }
   const handleCancel = () => { 

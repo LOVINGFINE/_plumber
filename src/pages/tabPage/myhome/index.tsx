@@ -1,7 +1,7 @@
 import React, { Component, useState, useEffect } from "react";
 import { View, Button, Image } from "@tarojs/components";
 import { AtIcon,AtToast  } from 'taro-ui'
-import Taro from "@tarojs/taro";
+import Taro,{useDidShow} from "@tarojs/taro";
 import { user_icon } from "@/assets/model";
 import style from "./index.module.less";
 import { Iuser } from "./type";
@@ -30,13 +30,13 @@ export default ({
     provinceName:''
   });
   const [loading,setLoad] = useState<boolean>(false)
-    useEffect(() => {
-      let t = Taro.getStorageSync('token') || ''
+  useDidShow(() => {
+    　　let t = Taro.getStorageSync('token') || ''
       setToken(t)
       if(t!=''){
         getUserMessage();
       }
-    }, []);
+    })
   const userLogin = (e:any) => {
     setLoad(true)
     Taro.login().then(res => {
@@ -53,6 +53,8 @@ export default ({
             setLoad(false)
             popBoxInfo(message) 
           }
+      }).catch(()=>{
+        setLoad(false)
       })
       
     });
@@ -63,13 +65,20 @@ export default ({
   }
   const check = (phone: string) => {
     checkRegister({ phone }).then(res => {
-      const { register, token } = res.data;
-      if (register) {
-        Taro.setStorageSync("token", token);
+      let {code,message} = res
+      
+      if(code===200){
+        const { register, token } = res.data;
+        if (register) {
+          Taro.setStorageSync("token", token);
+          setLoad(false)
+          Taro.reLaunch({url:'/pages/first/index?login=true'})
+        } else {
+          Taro.navigateTo({ url: "/pages/user-login-code/index" });
+        }
+      }else {
         setLoad(false)
-        Taro.reLaunch({url:'/pages/first/index?login=true'})
-      } else {
-        Taro.navigateTo({ url: "/pages/user-login-code/index" });
+        popBoxInfo(message) 
       }
     });
   };
@@ -125,8 +134,8 @@ export default ({
           {/* <Button
             className={style.btn}
             onClick={()=>{
-              Taro.setStorageSync("phone", "18154175568");
-              check("18154175568");
+              Taro.setStorageSync("phone", "13771525262");
+              check("13771525262");
              }}
             >
             立即登录

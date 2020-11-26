@@ -19,6 +19,8 @@ export default () => {
     setOld(d.phone);
   }, []);
   const handleSend = ()=>{
+    console.log(1);
+    
     if(code.length===6){
       if(regPhone(newVal)){
         modifyPhoneNumber({
@@ -49,7 +51,7 @@ export default () => {
     }
   }
   const regPhone = (text:string) =>{
-    return /^1[3456789]d{9}$/.test(text)
+    return text.length===11
  }
   const handleCodeSend = ()=>{
     if(newVal!==''){

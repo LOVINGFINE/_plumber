@@ -63,7 +63,7 @@ export default (props: any) => {
   const changeAddress = (e)=>{
     if(citys.length>0){
       setProvinceName(mapData[e.value[0]].value)
-      setCityName(citys[e.value[0]].value) 
+      setCityName(citys[e.value[1]].value) 
     }else {
       setWarnText('请选择籍贯城市名')
       setInfoShow(true);

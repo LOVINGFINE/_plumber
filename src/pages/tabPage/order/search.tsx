@@ -37,11 +37,13 @@ export default ()=>{
          setHistory(false)
          let l = h_list
          if(l.findIndex(ele=>ele===key)!=-1||l.findIndex(ele=>ele===key)===0){
-          onPageChange(page)
+              setText(key)
+              onPageChange(1,key)
          }else {
             l.push(key)
             Taro.setStorageSync('history',l)
             setHisList([...l])
+            onPageChange(1,key)
          }
    }
    const deleteHistory= ()=>{
@@ -49,9 +51,9 @@ export default ()=>{
      Taro.setStorageSync('history',[])
      setHisList([])
    }
-   const onPageChange = (p: number) => {
+   const onPageChange = (p: number,str) => {
     setPage(p);
-     searchOrderList(p,text).then(res=>{
+     searchOrderList(p,str).then(res=>{
          if(res.code===200){
           
            let {data} = res
@@ -62,13 +64,11 @@ export default ()=>{
            }else {
             setMore(false);
              // 加载更多
+             let l = list
+             setList(l.concat(data))
            }
          }
      })
-    setTimeout(() => {
-      
-     
-    }, 3000);
   };
    return (<View className={style.ser_box} >
      <PopModal title={<View style={{lineHeight:'65px',textAlign:'center'}}>确定删除历史记录么?</View>} show={modal_show} handleOk={deleteHistory} handleCancel={()=>setModal(false)}/>
@@ -97,42 +97,42 @@ export default ()=>{
             lowerThreshold={10}
             onRefresherRefresh={() => {
               setRefresh(true);
-              onPageChange(1);
+              onPageChange(1,text);
             }}
             onScrollToLower={() => {
               setMore(true);
-              onPageChange(page + 1);
+              onPageChange(page + 1,text);
             }}
             scrollY
             className={style.ser_main}>
            {
               history?(
                 <View className={style.his_box}>
-                         <View className={style.his_top}>
-                             <View>历史记录</View>
-                             <CheckEmpty isShow={h_list.length>0} empty_ele={<View />}>
-                             <Image src={his_delete} className={style.his_delete} onClick={()=>setModal(true)} />
-                             </CheckEmpty>
-                         </View>
-                         <CheckEmpty isShow={h_list.length>0} empty_ele={<View className={style.history_empty}>暂无历史搜索记录</View>}>
-                        <View className={style.his_list}>
-                         {
-                            h_list.map((ele:string)=>{
-                               return <View key={ele} className={style.his_item} onClick={()=>{
-                                 setText(ele)
-                                 handleSearch(ele)
-                               }}>{ele}</View>
-                            })
-                         }
-                         </View>
-                      </CheckEmpty>
+                     <View className={style.his_top}>
+                         <View>历史记录</View>
+                         <CheckEmpty isShow={h_list.length>0} empty_ele={<View />}>
+                         <Image src={his_delete} className={style.his_delete} onClick={()=>setModal(true)} />
+                         </CheckEmpty>
                      </View>
+                     <CheckEmpty isShow={h_list.length>0} empty_ele={<View className={style.history_empty}>暂无历史搜索记录</View>}>
+                    <View className={style.his_list}>
+                     {
+                        h_list.map((ele:string)=>{
+                           return <View key={ele} className={style.his_item} onClick={()=>{
+                             
+                             handleSearch(ele)
+                           }}>{ele}</View>
+                        })
+                     }
+                     </View>
+                  </CheckEmpty>
+                 </View>
                
               ):(
-                <View style={{padding:'0 15px',width:'100%',boxSizing:'border-box',marginTop:'15px'}}>
-               <CheckEmpty isShow={list.length>0} empty_ele={<Empty isText={true} />}>
-                   <OrderList list={list} />
-              </CheckEmpty>
+                <View style={{padding:'0 15px',width:'100%',boxSizing:'border-box',marginTop:'15px',backgroundColor:'#F8F8F8'}}>
+                  <CheckEmpty isShow={list.length>0} empty_ele={<Empty isText={true} />}>
+                     <OrderList list={list} />
+                  </CheckEmpty>
               </View>
               )
            }
