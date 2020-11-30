@@ -46,18 +46,47 @@ export default ({
         code:res.code
       }).then(ele=>{
          let {code,data,message} = ele
+         setLoad(false)
           if(code===200){
             Taro.setStorageSync("phone", data.phoneNumber);
             check(data.phoneNumber);
           }else {
-            setLoad(false)
-            popBoxInfo(message) 
+
+            popBoxInfo(message)
           }
       }).catch(()=>{
         setLoad(false)
       })
       
     });
+   
+    // const feedPhone = ()=>{
+    //   Taro.login().then(res => {
+    //     putPhoneWith({
+    //       iv:e.detail.iv,
+    //       encryptData:e.currentTarget.encryptedData,
+    //       code:res.code
+    //     }).then(ele=>{
+    //        let {code,data,message} = ele
+    //         if(code===200){
+    //           Taro.setStorageSync("phone", data.phoneNumber);
+    //           check(data.phoneNumber);
+    //         }else {
+              
+    //         }
+    //     }).catch(()=>{
+    //       setLoad(false)
+    //     })
+        
+    //   });
+    // }
+    // Taro.checkSession().then(()=>{
+    //   feedPhone()
+    // }).catch(()=>{
+    //   console.log('失效');
+      
+    //   feedPhone()
+    // })
   };
   const popBoxInfo = (text:string)=>{
     setText(text)
@@ -66,7 +95,6 @@ export default ({
   const check = (phone: string) => {
     checkRegister({ phone }).then(res => {
       let {code,message} = res
-      
       if(code===200){
         const { register, token } = res.data;
         if (register) {

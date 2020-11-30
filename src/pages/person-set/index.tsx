@@ -32,6 +32,7 @@ export default () => {
     cityName:'',
     provinceName:''
   })
+  const [provinceName,setProvinceName] = useState<string>('')
   useEffect(() => {
     getUserMessage(false);
   }, []);
@@ -80,6 +81,7 @@ export default () => {
         setTime(filterTimeDayN(data.solarTime))
         setTimeN(o.lunarDate)
         Taro.setStorageSync("user", data);
+        setProvinceName(data.provinceName?data.provinceName:'')
         setUser(data);
         if(type){
           setTimeout(()=>{
@@ -102,6 +104,16 @@ export default () => {
       modifyUserMessage(d)
     }else {
       popTextAlert('请选择籍贯城市名')
+    }
+  }
+  const setAddress = (e:string)=>{
+    //修改籍贯
+    if(e.length>0){
+      let d= {...user}
+      d.provinceName = e
+      modifyUserMessage(d)
+    }else {
+      popTextAlert('请输入籍贯')
     }
   }
   const onColumnChange = (e)=>{
@@ -241,7 +253,15 @@ export default () => {
         </View>
         <View className={style.name_ipt_item} style={{ border: "none" }}>
           <View className={style.name_item_lebal}>籍贯</View>
-          <Picker
+          <Input
+          className={style.name_item_text}
+          value={provinceName}
+          placeholder={'请输入籍贯'}
+          confirmType='send'
+          onInput={e => setProvinceName(e.detail.value)}
+          onConfirm={(e)=>setAddress(e.detail.value)}
+        />
+          {/* <Picker
             mode="multiSelector"
             range={[mapData,citys]}
             rangeKey={'label'}
@@ -263,7 +283,7 @@ export default () => {
             <AtIcon value="chevron-right" size="15" color="#A8A8A8" />
            </View>
           </Picker>
-          
+           */}
         </View>
       </View>
       <View className={style.btn_box} style={{ marginTop: "30px" }}>

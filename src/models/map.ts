@@ -7,3 +7,11 @@ export const getSearchMapList = (data)=>{
         region:data.region
     })
 }
+
+export const getLoctionAdress = (data)=>{
+    return _post(`/hydropower/order/map/searchV2`,{
+        getPoi: '1',
+        key: KEY_MAP,
+        location: data.latitude+','+data.longitude
+    })
+}

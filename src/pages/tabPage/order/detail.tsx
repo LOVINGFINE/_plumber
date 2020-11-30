@@ -53,7 +53,6 @@ export default ()=>{
             <View className={style.name_ipt_item} style={{border:'none'}}>
                <View className={style.name_item_lebal}>业主姓名:</View>
                <View  className={style.name_item_text_top}>{order_data.name}</View>
-               
             </View>
             <View className={style.name_ipt_item} style={{border:'none'}}>
                <View className={style.name_item_lebal}>业主电话:</View>
@@ -97,7 +96,6 @@ export default ()=>{
          </View>
    </View>)
 }
-
 const ProList = (
    {list=[]}:{
       list:Array<any>
@@ -120,27 +118,26 @@ const ProList = (
               })
           }
       })
-     
       return  newList
   }
    return <>
    {
-      handleList(list).map(item=>{
-         return <View key={item.code}>
-            <View className={style.pro_list_item_title} style={{fontSize:'18px',marginBottom:'12px'}}>{item.title}:</View>
-                {
-                   item.list.map(ele=>{
-                      return <View className={style.pro_list_item} key={ele.code}>
-                      <View className={style.pro_list_item_title}>{ele.name}</View>
-                      <View className={style.pro_list_item_dec}>
-                      <View style={{marginRight:'6px'}}>ID:{ele.code.slice(0,12)}{ele.code.length>11?'...':''}</View>
-                           <View>￥ {ele.pr/100}</View>
-                       </View>
+   handleList(list).map(item=>{
+      return <View key={item.code}>
+       <View className={style.pro_list_item_title} style={{fontSize:'18px',marginBottom:'12px'}}>{item.title}:</View>
+           {
+              item.list.map(ele=>{
+                 return <View className={style.pro_list_item} key={ele.code}>
+                 <View className={style.pro_list_item_title}>{ele.name}</View>
+                 <View className={style.pro_list_item_dec}>
+                 <View style={{marginRight:'6px'}}>ID:{ele.code.slice(0,12)}{ele.code.length>11?'...':''}</View>
+                      <View>￥ {ele.pr/100}</View>
                   </View>
-                   })
-                }
-         </View>
-      })
+             </View>
+              })
+           }
+    </View>
+   })
    }
    </>
 }

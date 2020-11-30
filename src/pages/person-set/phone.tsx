@@ -43,6 +43,7 @@ export default () => {
         });
       }else {
         setInfoText('请填入正确的手机号')
+        setPopShow(true)
       }
       
     }else {
