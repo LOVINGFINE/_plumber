@@ -29,11 +29,17 @@
       "outputPath": ""
     },
     "enableEngineNative": false,
+<<<<<<< HEAD
     "bundle": false,
     "useIsolateContext": true,
     "useCompilerModule": false,
     "userConfirmedUseCompilerModuleSwitch": false,
     "userConfirmedBundleSwitch": false,
+=======
+    "useIsolateContext": true,
+    "useCompilerModule": false,
+    "userConfirmedUseCompilerModuleSwitch": false,
+>>>>>>> 614aac5083f4b88964f159f6b873f85aee7fc8c7
     "packNpmManually": false,
     "packNpmRelationList": [],
     "minifyWXSS": true
