@@ -37,21 +37,13 @@ export default ()=>{
          setHistory(false)
          let l = h_list
          if(l.findIndex(ele=>ele===key)!=-1||l.findIndex(ele=>ele===key)===0){
-<<<<<<< HEAD
               setText(key)
               onPageChange(1,key)
-=======
-              onPageChange(page)
->>>>>>> b17a2ae44d4c03930fd8378c9e516cebf9a18142
          }else {
             l.push(key)
             Taro.setStorageSync('history',l)
             setHisList([...l])
-<<<<<<< HEAD
             onPageChange(1,key)
-=======
-            onPageChange(page)
->>>>>>> b17a2ae44d4c03930fd8378c9e516cebf9a18142
          }
    }
    const deleteHistory= ()=>{
@@ -59,7 +51,7 @@ export default ()=>{
      Taro.setStorageSync('history',[])
      setHisList([])
    }
-   const onPageChange = (p: number,str) => {
+   const onPageChange = (p: number,str:string) => {
     setPage(p);
      searchOrderList(p,str).then(res=>{
          if(res.code===200){
@@ -84,7 +76,7 @@ export default ()=>{
                <View className={style.search_box}>
                   <Image src={search_icon} className={style.top_search_icon} />
                   <Input 
-                  placeholder='搜索业主姓名/业主点话/业主地址' 
+                  placeholder='搜索业主姓名/业主电话/业主地址' 
                   onBlur={()=>setFocus(false)} 
                   focus={isFocus} 
                   onFocus={()=>setHistory(true)}
@@ -127,11 +119,7 @@ export default ()=>{
                      {
                         h_list.map((ele:string)=>{
                            return <View key={ele} className={style.his_item} onClick={()=>{
-<<<<<<< HEAD
                              
-=======
-                             setText(ele)
->>>>>>> b17a2ae44d4c03930fd8378c9e516cebf9a18142
                              handleSearch(ele)
                            }}>{ele}</View>
                         })

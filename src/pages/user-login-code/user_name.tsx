@@ -11,7 +11,6 @@ import mapData from '@/utils/map'
 import {calendar} from '@/utils/transformTime'
 export default (props: any) => {
   // 获取本地手机号
-  const phone = Taro.getStorageSync("phone");
   const [name, setName] = useState<string>("");
   const [time, setTime] = useState<string>("");
   const [time_n, setTimeN] = useState<string>('');
@@ -20,7 +19,6 @@ export default (props: any) => {
   const [citys,setCity] = useState<any>([])
   const [c,setC] = useState<number>(0)
   const [p,setP] = useState<number>(0)
-  const [cityName,setCityName] = useState<string>('')
   const [provinceName,setProvinceName] = useState<string>('')
   
   const handleSend = () => {
@@ -29,7 +27,7 @@ export default (props: any) => {
       sendInfo(isPy);
     } else {
       // 注册
-      modifyInfo({ name, solarTime:opTimeUnix(time),cityName,provinceName }).then(e => {
+      modifyInfo({ name, solarTime:opTimeUnix(time),cityName:'',provinceName }).then(e => {
           if (e.code === 200) {
         // 非空验证成功
             Taro.reLaunch({ url: "/pages/first/index?isFrist=true" });
@@ -60,16 +58,16 @@ export default (props: any) => {
     }
     setInfoShow(true);
   };
-  const changeAddress = (e)=>{
-    if(citys.length>0){
-      setProvinceName(mapData[e.value[0]].value)
-      setCityName(citys[e.value[1]].value) 
-    }else {
-      setWarnText('请选择籍贯城市名')
-      setInfoShow(true);
-    }
+  // const changeAddress = (e)=>{
+  //   if(citys.length>0){
+  //     setProvinceName(mapData[e.value[0]].value)
+  //     setCityName(citys[e.value[1]].value) 
+  //   }else {
+  //     setWarnText('请选择籍贯城市名')
+  //     setInfoShow(true);
+  //   }
     
-  }
+  // }
   const onColumnChange = (e)=>{
      if(e.column===0){
       setCity(mapData[e.value].children)
@@ -98,10 +96,11 @@ export default (props: any) => {
     <View className={style.username_box}>
       <PopInfo title={warn_text} show={info_show} setShow={setInfoShow} />
       <View className={style.name_ipt_item}>
-        <View className={style.name_item_lebal}>姓名</View>
+        <View className={style.name_item_lebal}>昵称</View>
         <Input
           className={style.name_item_text}
           value={name}
+          placeholder={'请输入昵称'}
           onInput={e => setName(e.detail.value)}
         />
       </View>
@@ -129,7 +128,13 @@ export default (props: any) => {
       </View>
       <View className={style.name_ipt_item}>
         <View className={style.name_item_lebal}>籍贯</View>
-        <Picker
+        <Input
+          className={style.name_item_text}
+          value={provinceName}
+          placeholder={'请输入籍贯'}
+          onInput={e => setProvinceName(e.detail.value)}
+        />
+        {/* <Picker
             mode="multiSelector"
             range={[mapData,citys]}
             rangeKey={'label'}
@@ -150,7 +155,7 @@ export default (props: any) => {
            }
             
            </View>
-          </Picker>
+          </Picker> */}
       </View>
       <View className={style.bottom_btn_box}>
         <Button className={style.bottom_btn} onClick={handleSend}>

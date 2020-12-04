@@ -21,7 +21,7 @@ export default () => {
   const handleSend = ()=>{
     console.log(1);
     
-    if(code.length===6){
+    if(code.length===4){
       if(regPhone(newVal)){
         modifyPhoneNumber({
           code: code,
@@ -33,6 +33,7 @@ export default () => {
             let a = {...user}
             a.phone = newVal
             Taro.setStorageSync('user',a)
+            Taro.setStorageSync('phone',newVal)
             Taro.redirectTo({ url: '/pages/person-set/index' });
             // Taro.clearStorage()
             // Taro.reLaunch({ url: '/pages/person-set/index?login=true' });
@@ -43,10 +44,11 @@ export default () => {
         });
       }else {
         setInfoText('请填入正确的手机号')
+        setPopShow(true)
       }
       
     }else {
-      setInfoText('请填入6位验证码')
+      setInfoText('请填入4位验证码')
       setPopShow(true)
     }
   }

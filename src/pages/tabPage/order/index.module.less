@@ -268,10 +268,20 @@
         text-align: right;
         font-size: 30px;
         color: #666;
-        height: 100%;
+        align-items: center;
         // overflow: hidden;
         // text-overflow: ellipsis;
         // white-space: nowrap;
+    }
+    .name_item_text_address {
+        width:70%;
+        
+        font-size: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        line-height: 35px;
+        color: #666;
     }
     .arrow_icon {
         font-size: 30px;
@@ -306,7 +316,6 @@
             width: 100%;
             padding-bottom: 30px;
         .pro_list_item_title {
-            width: 100%;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -319,7 +328,8 @@
             display: flex;
             font-size: 30px;
             color: #999999;
-            
+            justify-content: space-between;
+            align-items: center;
         }
     }
   }

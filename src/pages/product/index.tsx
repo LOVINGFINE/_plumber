@@ -16,6 +16,7 @@ import {postCodeUser,postOrderCreate,getGoodsWith} from '@/models/order'
 import {TPro} from '../tabPage/order/type'
 import {Tr} from './type'
 import {map_icon} from '@/assets/model'
+import {getLoctionAdress} from '@/models/map'
 export default ()=>{
    const [info_show,setInfo] = useState<boolean>(false)
    const [info_text,setInfoText] = useState<string>('')
@@ -48,16 +49,12 @@ export default ()=>{
    },[])
    useEffect(()=>{
       let id = getCurrentInstance().router.params.id || ''
-      console.log(id);
-      
-      if(id!=''){
-         setSteps(1)
-         let order = Taro.getStorageSync('order')
-         console.log(order.goodsList);
-         
+      if(id!=''&&id!='0'){
+         let order = Taro.getStorageSync(id)
          setUserOrder(order)
          setCostomName(order.ownerName)
          setCostomTel(order.ownerPhone)
+         setSteps(1)
       }
       // setCustomAddress(getCurrentInstance().router.params.id || '')
    },[])
@@ -65,17 +62,41 @@ export default ()=>{
       Taro.scanCode({}).then((res:any)=>{
           // 扫码成功
          let {result} = res
-          getGoodsWith(result).then(e=>{
+          getGoodsWith(result,order_data.id).then(e=>{
                let {code,data,message} = e
-               if(message!==''){
-                  setInfoBox(message) 
-                  setTimeout(()=>{
-                     if(code===200){
-                        Taro.redirectTo({url:'/pages/codeInfo/codeSuccess'})
+               if(code===200){
+                  if(data.message&&data.message!==''){
+                     setInfoBox(data.message) 
+                     setTimeout(()=>{
                         let or_d = {
                            ...order_data
                         }
                         let l = [...or_d.goodsList]
+                        if(l.findIndex(ele=>ele.code===data.goodsCode)===-1){
+                           l.push({
+                              bcn: data.bigCategory,
+                              code: data.goodsCode,
+                              ct: 1,
+                              name: data.goodsName,
+                              pr: 0,
+                              scn: data.smallCategory
+                           })
+                           or_d.goodsList = l
+                           or_d.money = conCulte(l)
+                           setUserOrder(or_d)
+                           Taro.setStorageSync(order_data.id.toString(),or_d)
+                           Taro.redirectTo({url:'/pages/codeInfo/codeSuccess?id='+order_data.id})
+                        }else {
+                           setInfoBox('该商品已添加，请勿重复添加')
+                           
+                        }  
+                     },1000)
+                  }else {
+                     let or_d = {
+                        ...order_data
+                     }
+                     let l = [...or_d.goodsList]
+                     if(l.findIndex(ele=>ele.code===data.goodsCode)===-1){
                         l.push({
                            bcn: data.bigCategory,
                            code: data.goodsCode,
@@ -87,49 +108,42 @@ export default ()=>{
                         or_d.goodsList = l
                         or_d.money = conCulte(l)
                         setUserOrder(or_d)
-                        Taro.setStorageSync('order',or_d)
-                        
+                        Taro.setStorageSync(or_d.id.toString(),or_d)
+                        Taro.redirectTo({url:'/pages/codeInfo/codeSuccess?id='+order_data.id})
                      }else {
-                        Taro.redirectTo({url:'/pages/codeInfo/codeError'})
+                           setInfoBox('该商品已添加，请勿重复添加')
                      }
-                  },1000)
-               }else {
-                  if(code===200){
-                     Taro.redirectTo({url:'/pages/codeInfo/codeSuccess'})
-                     let or_d = {
-                        ...order_data
-                     }
-                     let l = [...or_d.goodsList]
-                     l.push({
-                        bcn: data.bigCategory,
-                        code: data.goodsCode,
-                        ct: 1,
-                        name: data.goodsName,
-                        pr: data.price,
-                        scn: data.smallCategory
-                     })
-                     or_d.goodsList = l
-                     or_d.money = conCulte(l)
-                     setUserOrder(or_d)
-                     Taro.setStorageSync('order',or_d)
-                     
-                  }else {
-                     Taro.redirectTo({url:'/pages/codeInfo/codeError'})
                   }
+               }else {
+                  setInfoBox(message)
                }
                
-          })
-          
+          }) 
       }).catch((res)=>{
          // 扫码失败
-         Taro.redirectTo({url:'/pages/codeInfo/codeError?errorText=请联系欧普客服确认产品是否为真'})
+         if(res.errMsg==='scanCode:fail'){
+            Taro.redirectTo({url:'/pages/codeInfo/codeError?errorText=请联系欧普客服确认产品是否为真?id='+order_data.id})
+         }
+         
+      })
+   }
+   const setAddressLoction = (d:any)=>{
+      let o_d = d
+      Taro.getLocation({}).then(res=>{
+          let {latitude,longitude} = res
+         getLoctionAdress({latitude,longitude}).then(adr=>{
+            o_d.address = adr.data
+            setUserOrder(o_d)
+            Taro.setStorageSync(d.id.toString(),o_d)
+            setSteps(1)
+         })
+      }).catch(res=>{
+         setSteps(0)
       })
    }
    const postDataSteps = ()=>{
       // 提交数据
-      if(isPost||steps===1){
-         // 可以操作
-         setLoad(true)
+      setLoad(true)
          if(steps===0){
             postCodeUser({code,phone}).then(res=>{
                let {code,data,message} = res
@@ -146,14 +160,17 @@ export default ()=>{
                   d.id = data.id
                   d.codeId = data.codeId
                   d.phone = phone
-                  setUserOrder(d)
-                  Taro.setStorageSync('order',d)
-                  setSteps(1)
+                  let store = Taro.getStorageSync(d.id.toString()) || null
+                  if(store){
+                     setUserOrder(store)
+                     setSteps(1)
+                  }else {
+                     setAddressLoction(d)
+                  }
                }
             }) 
          }else {
             // 提交安装单
-
             if(order_data.ownerName!=''){
                if(regPhone(order_data.ownerPhone)){
                   if(order_data.address!=''){
@@ -171,29 +188,23 @@ export default ()=>{
                setInfoBox('请填入业主姓名')
             }
          }
-      }
    }
    const regPhone = (text:string) =>{
         return text.length===11
    }
    const commitOrder = ()=>{
       if(order_data.goodsList.length>0){
-         if(order_data.money>0){
-            postOrderCreate(order_data).then(res=>{
-               setLoad(false)
-               let {code,message} = res
-               if(code===200){
-                  Taro.reLaunch({ url: "/pages/first/index" });
-                  Taro.setStorageSync('order',null)
-                  Taro.setStorageSync('costom',null)
-               }else {
-                  setInfoBox(message)
-               }
-            })
-         }else {
+         postOrderCreate(order_data).then(res=>{
             setLoad(false)
-            setInfoBox('安装产品已被其他水电工使用，请重新扫码添加')
-         }
+            let {code,message} = res
+            if(code===200){
+               Taro.reLaunch({ url: "/pages/first/index" });
+               Taro.setStorageSync(order_data.id.toString(),null)
+               Taro.setStorageSync('costom',null)
+            }else {
+               setInfoBox(message)
+            }
+         })
       }else {
          setLoad(false)
          setInfoBox('请添加产品')
@@ -216,7 +227,7 @@ export default ()=>{
       or_d.goodsList = l
       or_d.money = conCulte(l)
       setUserOrder(or_d)
-      Taro.setStorageSync('order',or_d)
+      Taro.setStorageSync(or_d.id.toString(),or_d)
    }
    const targetChange = (value:string,fun:(e:any)=>void)=>{
           fun(value)
@@ -239,11 +250,11 @@ export default ()=>{
          case 'name':
             return <View className={style.custom_ipt_box}>
             <View className={style.custom_ipt_title}>修改姓名</View>
-            <View className={style.custom_ipt_conent}>
-            <View className={style.custom_ipt_conent_lebal}>姓名</View>
-            <Input placeholder='请输入姓名' value={custom_name} className={style.custom_ipt_conent_text} onInput={(e)=>setCostomName(e.detail.value)}  />
-            </View>
-     </View>
+               <View className={style.custom_ipt_conent}>
+                  <View className={style.custom_ipt_conent_lebal}>姓名</View>
+                  <Input placeholder='请输入姓名' value={custom_name} className={style.custom_ipt_conent_text} onInput={(e)=>setCostomName(e.detail.value)}  />
+               </View>
+           </View>
          default:
             return ''
       }
@@ -252,19 +263,17 @@ export default ()=>{
    const handleModalOK = ()=>{
       let d = {
          ...order_data
-       }
-       
+      }
       switch(modal_type){
          case 'delete':
           deletePro()
             break;
          case 'tel':
             d.ownerPhone = custom_tel
-            
             break;
          case 'name':
              d.ownerName = custom_name
-             Taro.setStorageSync('order', d)
+             Taro.setStorageSync(d.id.toString(), d)
              break;
          default:
             return 
@@ -293,7 +302,7 @@ export default ()=>{
          default:
             return 
       }
-      Taro.setStorageSync('order', d)
+      Taro.setStorageSync(d.id.toString(), d)
    }
    const clickModal = (e)=>{
       setModalEle(e)
@@ -306,12 +315,12 @@ export default ()=>{
        setInfoText(text)
        setInfo(true)
    }
-   const setCustomAddress = (text:string)=>{
-      let d = {...order_data}
-      d.address = text
-      setUserOrder(d)
-      Taro.setStorageSync('order',d)
-   }
+   // const setCustomAddress = (text:string)=>{
+   //    let d = {...order_data}
+   //    d.address = text
+   //    setUserOrder(d)
+   //    Taro.setStorageSync('order',d)
+   // }
    return (<View className={style.box} >
         <PopInfo show={info_show} setShow={setInfo}  title={info_text} time={10} />
         <PopModal 
@@ -362,22 +371,22 @@ export default ()=>{
             <ScrollView scrollY className={style.pro_main}>
             <View style={{padding:'0 15px',boxSizing:'border-box'}}>
                 {
-                     order_data.goodsList.map((ele:TPro,i:number)=>{
-                        return <View className={style.pro_item} key={ele.code}>
-                               <View className={style.pro_item_type}>{ele.scn}:</View>
-                                 <View className={style.pro_item_name} >
-                                    <View style={{width:'284px'}}>{ele.name}</View>
-                                    <View className={style.pro_delete_text} onClick={()=>{
-                                       setDeleteId(i)
-                                       clickModal('delete')
-                                    }}>删除</View>
-                                 </View>
-                               <View className={style.pro_item_bottom}>
-                                 <View style={{marginRight:'12px'}}>ID: {ele.code.slice(0,8)}{ele.code.length>8?'...':''}</View>
-                                  <View>商品佣金 ￥{ele.pr/100}</View>
-                               </View>
+                  order_data.goodsList.map((ele:TPro,i:number)=>{
+                     return <View className={style.pro_item} key={ele.code}>
+                      <View className={style.pro_item_type}>{ele.scn}:</View>
+                        <View className={style.pro_item_name} >
+                           <View style={{width:'284px'}}>{ele.name}</View>
+                           <View className={style.pro_delete_text} onClick={()=>{
+                              setDeleteId(i)
+                              clickModal('delete')
+                           }}>删除</View>
                         </View>
-                     })
+                      <View className={style.pro_item_bottom}>
+                        <View style={{marginRight:'12px'}}>ID: {ele.code.slice(0,8)}{ele.code.length>8?'...':''}</View>
+                         <View>商品佣金 ￥{ele.pr/100}</View>
+                      </View>
+                     </View>
+                  })
                 }
                 
             </View>
@@ -392,10 +401,7 @@ export default ()=>{
             <View className={style.num_show_text}>商品总金额: ￥{order_data.money/100}</View>
          </CheckEmpty>
          <View className={style.bottom_btn_box} >
-            <Button className={style.bottom_btn} style={isPost||steps===1?{}:{
-               backgroundColor:'#003aa56e',
-               boxShadow:'2px 2px 2px  #003aa531'
-            }} onClick={postDataSteps}>提交</Button>
+            <Button className={style.bottom_btn} style={{}} onClick={postDataSteps}>提交</Button>
          </View>
    </View>)
 }

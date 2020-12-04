@@ -30,6 +30,6 @@ export const postOrderCreate = (data:Tr) =>{
   return _post(`/hydropower/order/commit`,data)
 }
 
-export const getGoodsWith = (info:string)=>{
-  return _post(`/hydropower/order/scan/info`,{scanInfo:info})
+export const getGoodsWith = (info:string,id:any)=>{
+  return _post(`/hydropower/order/scan/info`,{scanInfo:info,orderId:id})
 } 

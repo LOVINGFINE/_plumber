@@ -54,11 +54,10 @@ export default ()=>{
     }  
     const handleBack = ()=>{
         if(url!=''){
-            let order = Taro.getStorageSync('order')
+            let order = Taro.getStorageSync(id)
             order.address = url
-            console.log(order);
             
-            Taro.setStorageSync('order',order)
+            Taro.setStorageSync(id,order)
         }
         Taro.redirectTo({url:`/pages/product/index?id=${id}`})
     }

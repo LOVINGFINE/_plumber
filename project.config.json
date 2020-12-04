@@ -1,101 +1,103 @@
 {
-	"miniprogramRoot": "dist/",
-	"projectname": "_plumber",
-	"description": "水电安装小程序",
-	"appid": "wxcd1ea158d76fae87",
-	"setting": {
-		"urlCheck": false,
-		"es6": false,
-		"enhance": false,
-		"postcss": true,
-		"preloadBackgroundData": false,
-		"minified": false,
-		"newFeature": true,
-		"coverView": true,
-		"nodeModules": false,
-		"autoAudits": false,
-		"showShadowRootInWxmlPanel": false,
-		"scopeDataCheck": false,
-		"uglifyFileName": false,
-		"checkInvalidKey": true,
-		"checkSiteMap": true,
-		"uploadWithSourceMap": true,
-		"compileHotReLoad": false,
-		"useMultiFrameRuntime": false,
-		"useApiHook": true,
-		"babelSetting": {
-			"ignore": [],
-			"disablePlugins": [],
-			"outputPath": ""
-		},
-		"enableEngineNative": false,
-		"useIsolateContext": true,
-		"useCompilerModule": false,
-		"userConfirmedUseCompilerModuleSwitch": false,
-		"packNpmManually": false,
-		"packNpmRelationList": [],
-		"minifyWXSS": true
-	},
-	"paths": {
-		"@/components/*": [
-			"./src/components/*"
-		],
-		"@/utils/*": [
-			"./src/utils/*"
-		]
-	},
-	"compileType": "miniprogram",
-	"simulatorType": "wechat",
-	"simulatorPluginLibVersion": {},
-	"condition": {
-		"plugin": {
-			"list": []
-		},
-		"game": {
-			"list": []
-		},
-		"gamePlugin": {
-			"list": []
-		},
-		"miniprogram": {
-			"list": [
-				{
-					"name": "安装产品",
-					"pathName": "pages/product/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"name": "验证码",
-					"pathName": "pages/user-login/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"name": "pages/user-login-code/user_name",
-					"pathName": "pages/user-login-code/user_name",
-					"query": "",
-					"scene": null
-				},
-				{
-					"name": "pages/first/index",
-					"pathName": "pages/first/index",
-					"query": "",
-					"scene": null
-				},
-				{
-					"name": "pages/tabPage/order/detail",
-					"pathName": "pages/tabPage/order/detail",
-					"query": "",
-					"scene": null
-				},
-				{
-					"name": "pages/codeInfo/codeError",
-					"pathName": "pages/codeInfo/codeError",
-					"query": "",
-					"scene": null
-				}
-			]
-		}
-	}
+  "miniprogramRoot": "dist/",
+  "projectname": "_plumber",
+  "description": "水电安装小程序",
+  "appid": "wxcd1ea158d76fae87",
+  "setting": {
+    "urlCheck": false,
+    "es6": false,
+    "enhance": false,
+    "postcss": true,
+    "preloadBackgroundData": false,
+    "minified": false,
+    "newFeature": true,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": false,
+    "scopeDataCheck": false,
+    "uglifyFileName": false,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": false,
+    "useMultiFrameRuntime": false,
+    "useApiHook": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    },
+    "enableEngineNative": false,
+    "bundle": false,
+    "useIsolateContext": true,
+    "useCompilerModule": false,
+    "userConfirmedUseCompilerModuleSwitch": false,
+    "userConfirmedBundleSwitch": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true
+  },
+  "paths": {
+    "@/components/*": [
+      "./src/components/*"
+    ],
+    "@/utils/*": [
+      "./src/utils/*"
+    ]
+  },
+  "compileType": "miniprogram",
+  "simulatorType": "wechat",
+  "simulatorPluginLibVersion": {},
+  "condition": {
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "gamePlugin": {
+      "list": []
+    },
+    "miniprogram": {
+      "list": [
+        {
+          "name": "安装产品",
+          "pathName": "pages/product/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "验证码",
+          "pathName": "pages/user-login/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/user-login-code/user_name",
+          "pathName": "pages/user-login-code/user_name",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/first/index",
+          "pathName": "pages/first/index",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/tabPage/order/detail",
+          "pathName": "pages/tabPage/order/detail",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/codeInfo/codeError",
+          "pathName": "pages/codeInfo/codeError",
+          "query": "",
+          "scene": null
+        }
+      ]
+    }
+  }
 }
